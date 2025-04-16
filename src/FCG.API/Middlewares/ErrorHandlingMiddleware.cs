@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.Json;
 using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace FCG.API.Middlewares
 {

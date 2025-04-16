@@ -7,16 +7,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace FCG.Infrastructure.Repository
 {
     public class PromocaoRepository : IPromocaoRepository
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<PromocaoRepository> _logger;
 
-        public PromocaoRepository(AppDbContext context)
+        public PromocaoRepository(AppDbContext context, ILogger<PromocaoRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
         public async Task<bool> AterarPromocaoAsync(Promocao promocao)
         {
@@ -28,8 +31,8 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AterarPromocaoAsync), ex.Message);
+                return false;
             }
 
         }
@@ -40,9 +43,9 @@ namespace FCG.Infrastructure.Repository
             {
                 return await _context.Promocoes.FindAsync(id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarPromocaoIdAsync), ex.Message);
                 throw;
             }
             
@@ -61,10 +64,10 @@ namespace FCG.Infrastructure.Repository
                 }
                 return false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarPromocaoAsync), ex.Message);
+                return false;
             }
 
         }
@@ -77,7 +80,7 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListaPromocaoAsync), ex.Message);
                 throw;
             }
         }
@@ -92,7 +95,7 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarPromocaoAsync), ex.Message);
                 throw;
             }
         }

@@ -7,16 +7,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace FCG.Infrastructure.Repository
 {
     public class UsuarioRepository : IUsuarioRepository
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<UsuarioRepository> _logger;
 
-        public UsuarioRepository(AppDbContext context)
+        public UsuarioRepository(AppDbContext context, ILogger<UsuarioRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
         public async Task<bool> AlterarAsync(Usuario usuario)
         {
@@ -29,7 +32,8 @@ namespace FCG.Infrastructure.Repository
             catch (Exception ex)
             {
 
-                throw;
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AlterarAsync), ex.Message);
+                return false;   
             }
         }
 
@@ -41,7 +45,7 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarUsuarioIdAsync), ex.Message);
                 throw;
             }
         }
@@ -62,7 +66,8 @@ namespace FCG.Infrastructure.Repository
             catch (Exception ex)
             {
 
-                throw;
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarUsuarioAsync), ex.Message);
+                return false;
             }
         }
 
@@ -74,7 +79,7 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListaUsuariosAsync), ex.Message);
                 throw;
             }
         }
@@ -89,8 +94,8 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarUsuarioAsync), ex.Message);
+                return false;
             }
         }
     }

@@ -7,16 +7,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace FCG.Infrastructure.Repository
 {
     public class CompraRepository : ICompraRepository
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<CompraRepository> _logger;
 
-        public CompraRepository(AppDbContext context)
+        public CompraRepository(AppDbContext context, ILogger<CompraRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<Compra> BuscarCompraIdAsync(Guid id)
@@ -27,7 +30,7 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarCompraIdAsync), ex.Message);
                 throw;
             }
             
@@ -41,7 +44,7 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListaCompraAsync), ex.Message);
                 throw;
             }
             
@@ -57,8 +60,8 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarCompraAsync), ex.Message);
+                return false;
             }
 
         }
@@ -73,8 +76,8 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AlterarCompraAsync), ex.Message);
+                return false;
             }
 
         }
@@ -94,8 +97,8 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarCompraAsync), ex.Message);
+                return false;
             }
 
         }

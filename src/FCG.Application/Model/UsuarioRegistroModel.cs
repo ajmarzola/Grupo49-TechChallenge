@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FCG.Application.DTOs
 {
-    public class UsuarioRegistroDTO
+    public class UsuarioRegistroModel
     {
         public string Nome { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

@@ -27,7 +27,7 @@ namespace FCG.API
         }
 
         [HttpPost("registro")]
-        public IActionResult Registrar([FromBody] UsuarioRegistroDTO dto)
+        public IActionResult Registrar([FromBody] UsuarioRegistroModel dto)
         {
             if (_context.Usuarios.Any(u => u.Email == dto.Email))
                 return BadRequest("Usuário já cadastrado.");
@@ -48,7 +48,7 @@ namespace FCG.API
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] UsuarioLoginDTO dto)
+        public IActionResult Login([FromBody] UsuarioLoginModel dto)
         {
             var usuario = _context.Usuarios.FirstOrDefault(u => u.Email == dto.Email);
             if (usuario == null || !BCrypt.Net.BCrypt.Verify(dto.Senha, usuario.SenhaHash))

@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FCG.Domain\FCG.Domain.csproj" />
+    <ProjectReference Include="..\FCG.Infrastructure\FCG.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

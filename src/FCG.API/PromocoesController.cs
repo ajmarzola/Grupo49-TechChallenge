@@ -15,11 +15,9 @@ namespace FCG.API
     [Route("api/[controller]")]
     public class PromocoesController : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public PromocoesController(AppDbContext context)
+        public PromocoesController()
         {
-            _context = context;
+            
         }
 
         // GET: /api/promocoes
@@ -27,11 +25,12 @@ namespace FCG.API
         [Authorize]
         public async Task<ActionResult<IEnumerable<Promocao>>> Get()
         {
-            var hoje = DateTime.UtcNow;
-            return await _context.Promocoes
-                .Where(p => p.DataInicio <= hoje && p.DataFim >= hoje)
-                .Include(p => p.Jogo)
-                .ToListAsync();
+            //var hoje = DateTime.UtcNow;
+            //return await _context.Promocoes
+            //    .Where(p => p.DataInicio <= hoje && p.DataFim >= hoje)
+            //    .Include(p => p.Jogo)
+            //    .ToListAsync();
+            return Ok();
         }
 
         // POST: /api/promocoes
@@ -39,10 +38,11 @@ namespace FCG.API
         [Authorize(Roles = "Administrador")]
         public async Task<ActionResult<Promocao>> Post([FromBody] Promocao promocao)
         {
-            promocao.Id = Guid.NewGuid();
-            _context.Promocoes.Add(promocao);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetById), new { id = promocao.Id }, promocao);
+            //promocao.Id = Guid.NewGuid();
+            //_context.Promocoes.Add(promocao);
+            //await _context.SaveChangesAsync();
+            //return CreatedAtAction(nameof(GetById), new { id = promocao.Id }, promocao);
+            return Ok();
         }
 
         // GET: /api/promocoes/{id}
@@ -50,12 +50,13 @@ namespace FCG.API
         [Authorize]
         public async Task<ActionResult<Promocao>> GetById(Guid id)
         {
-            var promocao = await _context.Promocoes
-                .Include(p => p.Jogo)
-                .FirstOrDefaultAsync(p => p.Id == id);
+            //var promocao = await _context.Promocoes
+            //    .Include(p => p.Jogo)
+            //    .FirstOrDefaultAsync(p => p.Id == id);
 
-            if (promocao == null) return NotFound();
-            return promocao;
+            //if (promocao == null) return NotFound();
+            //return promocao;
+            return Ok();
         }
 
         // PUT: /api/promocoes/{id}
@@ -63,11 +64,12 @@ namespace FCG.API
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Put(Guid id, [FromBody] Promocao input)
         {
-            if (id != input.Id) return BadRequest();
+            //if (id != input.Id) return BadRequest();
 
-            _context.Entry(input).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return NoContent();
+            //_context.Entry(input).State = EntityState.Modified;
+            //await _context.SaveChangesAsync();
+            //return NoContent();
+            return Ok();
         }
 
         // DELETE: /api/promocoes/{id}
@@ -75,12 +77,13 @@ namespace FCG.API
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var promocao = await _context.Promocoes.FindAsync(id);
-            if (promocao == null) return NotFound();
+            //var promocao = await _context.Promocoes.FindAsync(id);
+            //if (promocao == null) return NotFound();
 
-            _context.Promocoes.Remove(promocao);
-            await _context.SaveChangesAsync();
-            return NoContent();
+            //_context.Promocoes.Remove(promocao);
+            //await _context.SaveChangesAsync();
+            //return NoContent();
+            return Ok();
         }
     }
 }

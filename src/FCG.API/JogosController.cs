@@ -14,11 +14,11 @@ namespace FCG.API
     [Route("api/[controller]")]
     public class JogosController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        
 
-        public JogosController(AppDbContext context)
+        public JogosController()
         {
-            _context = context;
+          
         }
 
         // GET /api/jogos
@@ -26,7 +26,7 @@ namespace FCG.API
         [Authorize] // qualquer usuário logado (Aluno ou Admin)
         public async Task<ActionResult<IEnumerable<Jogo>>> GetJogos()
         {
-            return await _context.Jogos.ToListAsync();
+            return NoContent();
         }
 
         // GET /api/jogos/{id}
@@ -34,9 +34,7 @@ namespace FCG.API
         [Authorize]
         public async Task<ActionResult<Jogo>> GetJogo(Guid id)
         {
-            var jogo = await _context.Jogos.FindAsync(id);
-            if (jogo == null) return NotFound();
-            return jogo;
+            return NoContent();
         }
 
         // POST /api/jogos
@@ -44,10 +42,7 @@ namespace FCG.API
         [Authorize(Roles = "Administrador")]
         public async Task<ActionResult<Jogo>> PostJogo(Jogo jogo)
         {
-            jogo.Id = Guid.NewGuid();
-            _context.Jogos.Add(jogo);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetJogo), new { id = jogo.Id }, jogo);
+            return NoContent();
         }
 
         // PUT /api/jogos/{id}
@@ -55,10 +50,6 @@ namespace FCG.API
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> PutJogo(Guid id, Jogo jogo)
         {
-            if (id != jogo.Id) return BadRequest();
-
-            _context.Entry(jogo).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
             return NoContent();
         }
 
@@ -67,11 +58,7 @@ namespace FCG.API
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> DeleteJogo(Guid id)
         {
-            var jogo = await _context.Jogos.FindAsync(id);
-            if (jogo == null) return NotFound();
 
-            _context.Jogos.Remove(jogo);
-            await _context.SaveChangesAsync();
             return NoContent();
         }
     }

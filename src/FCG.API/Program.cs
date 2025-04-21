@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +72,18 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
+// Configurar Serilog
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+// Adicionar logging
+builder.Services.AddLogging();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -89,6 +102,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapGraphQL("/graphql");
 
-app.MapGet("/", () => "✅ FCG.TechChallenge API rodando com sucesso!");
+app.MapGet("/", () => "FCG.TechChallenge API rodando com sucesso!");
 
 app.Run();

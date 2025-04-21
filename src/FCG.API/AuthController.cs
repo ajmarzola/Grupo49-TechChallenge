@@ -10,6 +10,7 @@ using System.Text;
 using System;
 using FCG.Application.DTOs;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace FCG.API
 {
@@ -19,59 +20,80 @@ namespace FCG.API
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(AppDbContext context, IConfiguration configuration)
+        public AuthController(AppDbContext context, IConfiguration configuration, ILogger<AuthController> logger)
         {
             _context = context;
             _configuration = configuration;
+            _logger = logger;
         }
 
         [HttpPost("registro")]
         public IActionResult Registrar([FromBody] UsuarioRegistroModel dto)
         {
-            if (_context.Usuarios.Any(u => u.Email == dto.Email))
-                return BadRequest("Usuário já cadastrado.");
-
-            var usuario = new Usuario
+            try
             {
-                Id = Guid.NewGuid(),
-                Nome = dto.Nome,
-                Email = dto.Email,
-                SenhaHash = BCrypt.Net.BCrypt.HashPassword(dto.Senha),
-                Role = dto.Role
-            };
+                if (_context.Usuarios.Any(u => u.Email == dto.Email))
+                    return BadRequest("Usuário já cadastrado.");
 
-            _context.Usuarios.Add(usuario);
-            _context.SaveChanges();
+                var usuario = new Usuario
+                {
+                    Id = Guid.NewGuid(),
+                    Nome = dto.Nome,
+                    Email = dto.Email,
+                    Senha = BCrypt.Net.BCrypt.HashPassword(dto.Senha),
+                    Role = dto.Role
+                };
 
-            return Ok("Usuário registrado com sucesso.");
+                _context.Usuarios.Add(usuario);
+                _context.SaveChanges();
+
+                return Ok("Usuário registrado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao registrar o usuário: {Nome} com email: {Email}", dto.Nome, dto.Email);
+                return BadRequest();
+            }
+            
         }
 
         [HttpPost("login")]
         public IActionResult Login([FromBody] UsuarioLoginModel dto)
         {
-            var usuario = _context.Usuarios.FirstOrDefault(u => u.Email == dto.Email);
-            if (usuario == null || !BCrypt.Net.BCrypt.Verify(dto.Senha, usuario.SenhaHash))
-                return Unauthorized("Credenciais inválidas.");
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]!);
-
-            var tokenDescriptor = new SecurityTokenDescriptor
+            try
             {
-                Subject = new ClaimsIdentity(new[]
+                var usuario = _context.Usuarios.FirstOrDefault(u => u.Email == dto.Email);
+                if (usuario == null || !BCrypt.Net.BCrypt.Verify(dto.Senha, usuario.Senha))
+                    return Unauthorized("Credenciais inválidas.");
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]!);
+
+                var tokenDescriptor = new SecurityTokenDescriptor
                 {
+                    Subject = new ClaimsIdentity(new[]
+                    {
                 new Claim(ClaimTypes.Name, usuario.Email),
                 new Claim(ClaimTypes.Role, usuario.Role),
                 new Claim("UserId", usuario.Id.ToString())
             }),
-                Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
+                    Expires = DateTime.UtcNow.AddHours(2),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+                var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return Ok(new { token = tokenHandler.WriteToken(token) });
+                return Ok(new { token = tokenHandler.WriteToken(token) });
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Erro ao registrar o usuário com email: {Email}", dto.Email);
+                return BadRequest();
+            }
+
         }
     }
 }

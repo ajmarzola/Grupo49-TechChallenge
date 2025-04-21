@@ -16,15 +16,25 @@ namespace FCG.API
         private readonly IJogoService _service;
         private readonly ILogger<AuthController> _logger;
 
+        /// <summary>
+        /// EndPoint para operações de jogos
+        /// </summary>
+        /// <param name="service">Serviço</param>
+        /// <param name="logger">Log</param>
         public JogosController(IJogoService service, ILogger<AuthController> logger)
         {
             _service = service;
             _logger = logger;
         }
 
-        // GET /api/jogos
+        /// <summary>
+        /// Listar todos os Jogos
+        /// GET /api/jogos 
+        /// Autorização: qualquer usuário logado (Aluno ou Admin)
+        /// </summary>
+        /// <returns>Lista de Jogos</returns>
         [HttpGet]
-        [Authorize] // qualquer usuário logado (Aluno ou Admin)
+        [Authorize]
         public async Task<ActionResult<IEnumerable<JogoModel>>> Listar()
         {
             try
@@ -39,7 +49,13 @@ namespace FCG.API
             }
         }
 
-        // GET /api/jogos/{id}
+        /// <summary>
+        /// Busca Jogo por Id
+        /// GET /api/jogos/{id}
+        /// Autorização: qualquer usuário logado (Aluno ou Admin)
+        /// </summary>
+        /// <param name="id">Id do Jogo</param>
+        /// <returns>Jogo</returns>
         [HttpGet("{id}")]
         [Authorize]
         public async Task<ActionResult<JogoModel>> BuscarPorId(Guid id)
@@ -62,7 +78,13 @@ namespace FCG.API
             }
         }
 
-        // POST /api/jogos
+        /// <summary>
+        /// Salvar novo Jogo
+        /// POST /api/jogos
+        /// Autorização: Admin
+        /// </summary>
+        /// <param name="jogo">Dados do Jogo</param>
+        /// <returns>Jogo</returns>
         [HttpPost]
         [Authorize(Roles = "Administrador")]
         public async Task<ActionResult<JogoModel>> Salvar(JogoModel jogo)
@@ -79,7 +101,14 @@ namespace FCG.API
             }
         }
 
-        // PUT /api/jogos/{id}
+        /// <summary>
+        /// Alterar Jogo Existente
+        /// PUT /api/jogos/{id}
+        /// Autorização: Admin
+        /// </summary>
+        /// <param name="id">Id do Jogo</param>
+        /// <param name="jogo">Dados do Jogo</param>
+        /// <returns>Sucesso ou falha</returns>
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> PutJogo(Guid id, JogoModel jogo)
@@ -105,7 +134,13 @@ namespace FCG.API
             }
         }
 
-        // DELETE /api/jogos/{id}
+        /// <summary>
+        /// Apagar Jogo Existente
+        /// DELETE /api/jogos/{id}
+        /// Autorização: Admin
+        /// </summary>
+        /// <param name="id">Id do Jogo</param>
+        /// <returns>Sucesso ou falha</returns>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Deletar(Guid id)

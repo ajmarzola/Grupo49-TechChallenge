@@ -1,4 +1,5 @@
-﻿using FCG.Application.Services;
+﻿using FCG.Application.Model;
+using FCG.Application.Services;
 using FCG.Domain.Entities;
 using FCG.Domain.Repository;
 using System;
@@ -16,29 +17,85 @@ namespace FCG.Domain.Services
             _jogoRepository = jogoRepository;
         }
 
-        public Task<bool> AlterarAsync(Jogo model)
+        public Task<bool> AlterarAsync(JogoModel model)
         {
-            throw new NotImplementedException();
+            return _jogoRepository.AlterarAsync(Converter(model));
         }
 
-        public Task<Jogo> BuscarPorIdAsync(Guid id)
+        public Task<JogoModel> BuscarPorIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return _jogoRepository.BuscarPorIdAsync(id).ContinueWith(t => Converter(t.Result));
+        }
+
+        public Jogo Converter(JogoModel model)
+        {
+            ArgumentNullException.ThrowIfNull(model);
+
+            return new Jogo
+            {
+                Id = model.Id,
+                Nome = model.Nome,
+                Descricao = model.Descricao,
+                Preco = model.Preco,
+                Categoria = model.Categoria
+            };
+        }
+
+        public JogoModel Converter(Jogo model)
+        {
+            ArgumentNullException.ThrowIfNull(model);
+
+            return new JogoModel
+            {
+                Id = model.Id,
+                Nome = model.Nome,
+                Descricao = model.Descricao,
+                Preco = model.Preco,
+                Categoria = model.Categoria
+            };
+        }
+
+        public IList<JogoModel> Converter(IList<Jogo> model)
+        {
+            ArgumentNullException.ThrowIfNull(model);
+
+            var jogoModels = new List<JogoModel>();
+
+            foreach (var jogo in model)
+            {
+                jogoModels.Add(Converter(jogo));
+            }
+
+            return jogoModels;
+        }
+
+        public IList<Jogo> Converter(IList<JogoModel> model)
+        {
+            ArgumentNullException.ThrowIfNull(model);
+
+            var jogos = new List<Jogo>();
+
+            foreach (var jogoModel in model)
+            {
+                jogos.Add(Converter(jogoModel));
+            }
+
+            return jogos;
         }
 
         public Task<bool> DeletarAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return _jogoRepository.DeletarAsync(id);
         }
 
-        public Task<IList<Jogo>> ListarAsync()
+        public Task<IList<JogoModel>> ListarAsync()
         {
-            throw new NotImplementedException();
+            return _jogoRepository.ListarAsync().ContinueWith(t => Converter(t.Result));
         }
 
-        public Task<bool> SalvarAsync(Jogo model)
+        public Task<bool> SalvarAsync(JogoModel model)
         {
-            throw new NotImplementedException();
+            return _jogoRepository.SalvarAsync(Converter(model));
         }
     }
 }

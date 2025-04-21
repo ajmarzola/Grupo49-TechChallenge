@@ -4,8 +4,6 @@ using FCG.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +19,8 @@ namespace FCG.Infrastructure.Repository
             _context = context;
             _logger = logger;
         }
-        public async Task<bool> AterarPromocaoAsync(Promocao promocao)
+
+        public async Task<bool> AlterarAsync(Promocao promocao)
         {
             try
             {
@@ -31,13 +30,12 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AterarPromocaoAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AlterarAsync), ex.Message);
                 return false;
             }
-
         }
 
-        public async Task<Promocao> BuscarPromocaoIdAsync(Guid id)
+        public async Task<Promocao> BuscarPorIdAsync(Guid id)
         {
             try
             {
@@ -45,34 +43,36 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarPromocaoIdAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarPorIdAsync), ex.Message);
                 throw;
             }
-            
+
         }
 
-        public async Task<bool> DeletarPromocaoAsync(Guid id)
+        public async Task<bool> DeletarAsync(Guid id)
         {
             try
             {
                 var promocao = await _context.Promocoes.FindAsync(id);
+
                 if (promocao != null)
                 {
                     _context.Promocoes.Remove(promocao);
                     await _context.SaveChangesAsync();
                     return true;
                 }
+
                 return false;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarPromocaoAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarAsync), ex.Message);
                 return false;
             }
 
         }
 
-        public async Task<IEnumerable<Promocao>> ListaPromocaoAsync()
+        public async Task<IList<Promocao>> ListarAsync()
         {
             try
             {
@@ -80,12 +80,12 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListaPromocaoAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListarAsync), ex.Message);
                 throw;
             }
         }
 
-        public async Task<bool> SalvarPromocaoAsync(Promocao promocao)
+        public async Task<bool> SalvarAsync(Promocao promocao)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarPromocaoAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarAsync), ex.Message);
                 throw;
             }
         }

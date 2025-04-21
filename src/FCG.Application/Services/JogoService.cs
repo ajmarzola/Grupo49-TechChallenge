@@ -3,8 +3,6 @@ using FCG.Domain.Entities;
 using FCG.Domain.Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FCG.Domain.Services
@@ -13,32 +11,32 @@ namespace FCG.Domain.Services
     {
         private readonly IJogoRepository _jogoRepository;
 
-        public JogoService (IJogoRepository jogoRepository)
+        public JogoService(IJogoRepository jogoRepository)
         {
             _jogoRepository = jogoRepository;
         }
 
-        public Task<bool> AlterarJogo(Jogo model)
+        public Task<bool> AlterarAsync(Jogo model)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Jogo> BucarJogo(Guid id)
+        public Task<Jogo> BuscarPorIdAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> DeletarJogo(Guid id)
+        public Task<bool> DeletarAsync(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<List<Jogo>> ListaJogo()
+        public Task<IList<Jogo>> ListarAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> SavarJogo(Jogo model)
+        public Task<bool> SalvarAsync(Jogo model)
         {
             throw new NotImplementedException();
         }

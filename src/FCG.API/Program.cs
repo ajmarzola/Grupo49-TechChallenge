@@ -11,12 +11,15 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using FCG.Domain.Repository;
+using FCG.Domain.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Conexão com LocalDB
-builder.Services.AddPooledDbContextFactory<AppDbContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 // 2. Configuração do GraphQL
 builder.Services.AddGraphQLServer()
@@ -26,6 +29,10 @@ builder.Services.AddGraphQLServer()
     .AddProjections();
 
 builder.Services.AddAuthorization();
+// Registro da camada de domínio e aplicação 
+builder.Services.AddScoped<JogoService>();
+builder.Services.AddScoped<IJogoRepository, JogoRepository>();
+
 // 3. JWT
 var jwtKey = builder.Configuration["Jwt:SecretKey"] ?? "sua-chave-super-secreta";
 var key = Encoding.ASCII.GetBytes(jwtKey);
@@ -100,6 +107,8 @@ app.UseMiddleware<FCG.API.Middlewares.ErrorHandlingMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers(); 
+
 app.MapGraphQL("/graphql");
 
 app.MapGet("/", () => "FCG.TechChallenge API rodando com sucesso!");

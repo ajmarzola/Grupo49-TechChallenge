@@ -31,7 +31,11 @@ namespace FCG.Domain.Repository
                     return false;
                 }
 
-                _context.Entry(model).State = EntityState.Modified;
+                jogo.Nome = model.Nome;
+                jogo.Descricao = model.Descricao;
+                jogo.Preco = model.Preco;
+                jogo.Categoria = model.Categoria;
+
                 await _context.SaveChangesAsync();
                 return true;
             }

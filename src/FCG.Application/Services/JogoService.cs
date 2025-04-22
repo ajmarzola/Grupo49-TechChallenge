@@ -1,4 +1,6 @@
-﻿using FCG.Application.Services;
+﻿using Azure;
+using FCG.Application.Model;
+using FCG.Application.Services;
 using FCG.Domain.Entities;
 using FCG.Domain.Repository;
 using System;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FCG.Domain.Services
 {
-    internal class JogoService : IJogoService
+    public class JogoService : IJogoService
     {
         private readonly IJogoRepository _jogoRepository;
 
@@ -16,29 +18,76 @@ namespace FCG.Domain.Services
             _jogoRepository = jogoRepository;
         }
 
-        public Task<bool> AlterarAsync(Jogo model)
+        public async Task<bool> AlterarAsync(Jogo jogo)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _jogoRepository.AlterarAsync(jogo);
+               
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public Task<Jogo> BuscarPorIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var jogo = _jogoRepository.BuscarPorIdAsync(id);
+
+                if (jogo == null)
+                {
+                    throw new KeyNotFoundException($"Jogo {jogo} não encontroado.");
+                }
+
+                return jogo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
-        public Task<bool> DeletarAsync(Guid id)
+        public async Task<bool> DeletarAsync(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _jogoRepository.DeletarAsync(id);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
-        public Task<IList<Jogo>> ListarAsync()
+        public async Task<IList<Jogo>> ListarAsync()
         {
-            throw new NotImplementedException();
+            IList<Jogo> ListJogos = [];
+
+            try
+            {
+                ListJogos =  await _jogoRepository.ListarAsync();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return ListJogos;
         }
 
-        public Task<bool> SalvarAsync(Jogo model)
+        public async Task<bool> SalvarAsync(Jogo model)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _jogoRepository.SalvarAsync(model);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

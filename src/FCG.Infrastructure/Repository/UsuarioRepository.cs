@@ -37,6 +37,19 @@ namespace FCG.Infrastructure.Repository
             }
         }
 
+        public async Task<Usuario> BuscarUsuarioEmailAsync(string email)
+        {
+            try
+            {
+                return await _context.Usuarios.FirstAsync(x => x.Email == email);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarUsuarioEmailAsync), ex.Message);
+                throw;
+            }
+        }
+
         public async Task<Usuario> BuscarUsuarioIdAsync(Guid id)
         {
             try

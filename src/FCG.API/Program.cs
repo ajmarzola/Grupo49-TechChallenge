@@ -12,21 +12,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Microsoft.AspNetCore.Http;
+using FCG.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Conexão com LocalDB
-builder.Services.AddPooledDbContextFactory<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddPooledDbContextFactory<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 2. Configuração do GraphQL
-builder.Services.AddGraphQLServer()
-    .AddQueryType<Queries>()
-    .AddFiltering()
-    .AddSorting()
-    .AddProjections();
+builder.Services.AddGraphQLServer().AddQueryType<Queries>().AddFiltering().AddSorting().AddProjections();
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddTransient<IJogoService>();
+
 // 3. JWT
 var jwtKey = builder.Configuration["Jwt:SecretKey"] ?? "sua-chave-super-secreta";
 var key = Encoding.ASCII.GetBytes(jwtKey);
@@ -64,10 +63,13 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "Bearer"
     });
 
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement{
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
         {
-            new OpenApiSecurityScheme{
-                Reference = new OpenApiReference{
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
                     Id = "Bearer",
                     Type = ReferenceType.SecurityScheme
                 }
@@ -76,12 +78,8 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-
 // Configurar Serilog
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day)
-    .CreateLogger();
+Log.Logger = new LoggerConfiguration().WriteTo.Console().WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day).CreateLogger();
 
 builder.Host.UseSerilog();
 

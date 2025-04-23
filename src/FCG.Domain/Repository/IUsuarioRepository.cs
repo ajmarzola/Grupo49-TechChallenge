@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FCG.Domain.Repository
 {
-    public interface IUsuarioRepository
+    public interface IUsuarioRepository : IRepositoryBase<Usuario>
     {
         Task<Usuario> BuscarUsuarioIdAsync(Guid id);
         Task<Usuario> BuscarUsuarioEmailAsync(string email);

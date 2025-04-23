@@ -1,9 +1,13 @@
-﻿using System;
+﻿using FCG.Domain.Entities;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace FCG.Domain.Entities
+namespace FCG.Application.Model
 {
-    public class Jogo
+    public class JogoModel
     {
         public Guid Id { get; set; }
 
@@ -15,8 +19,8 @@ namespace FCG.Domain.Entities
 
         public string Categoria { get; set; } = string.Empty;
 
-        public ICollection<Promocao> Promocoes { get; set; } = [];
+        public ICollection<PromocaoModel> Promocoes { get; set; } = [];
 
-        public ICollection<Compra> Compras { get; set; } = [];
+        public ICollection<CompraModel> Compras { get; set; } = [];
     }
 }

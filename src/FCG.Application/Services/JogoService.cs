@@ -1,7 +1,9 @@
-﻿using System;
+﻿using FCG.Application.Model;
+using FCG.Application.Services;
+using FCG.Domain.Entities;
+using FCG.Domain.Repository;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FCG.Domain.Services
@@ -71,5 +73,9 @@ namespace FCG.Domain.Services
         {
             ArgumentNullException.ThrowIfNull(model);
 
+        public Task<bool> SalvarAsync(JogoModel model)
+        {
+            return _jogoRepository.SalvarAsync(Converter(model));
+        }
     }
 }

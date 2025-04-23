@@ -1,65 +1,160 @@
-﻿using FCG.Domain.Entities;
-using FCG.Infrastructure.Data;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
+using FCG.Application.Services;
+using FCG.Application.Model;
 
-namespace FCG.API
+namespace FCG.API.Controllers
 {
+    /// <summary>
+    /// Controller responsável pelas operações de gerenciamento de jogos.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class JogosController : ControllerBase
     {
-        
+        private readonly IJogoService _jogoService;
+        private readonly ILogger<JogosController> _logger;
 
-        public JogosController()
+        /// <summary>
+        /// Construtor do controller de jogos.
+        /// </summary>
+        /// <param name="jogoService">Serviço de aplicação para jogos.</param>
+        /// <param name="logger">Logger para rastreamento de erros.</param>
+        public JogosController(IJogoService jogoService, ILogger<JogosController> logger)
         {
-          
+            _jogoService = jogoService;
+            _logger = logger;
         }
 
-        // GET /api/jogos
+        /// <summary>
+        /// Retorna a lista de todos os jogos cadastrados.
+        /// </summary>
+        /// <returns>Lista de jogos.</returns>
+        /// <response code="200">Retorna a lista de jogos.</response>
+        /// <response code="400">Erro ao buscar os jogos.</response>
         [HttpGet]
-        [Authorize] // qualquer usuário logado (Aluno ou Admin)
-        public async Task<ActionResult<IEnumerable<Jogo>>> GetJogos()
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<JogoModel>>> Listar()
         {
-            return NoContent();
+            try
+            {
+                var jogos = await _jogoService.ListarAsync();
+                return Ok(jogos);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao listar jogos.");
+                return BadRequest("Erro ao listar jogos.");
+            }
         }
 
-        // GET /api/jogos/{id}
+        /// <summary>
+        /// Retorna os dados de um jogo específico.
+        /// </summary>
+        /// <param name="id">Identificador único do jogo.</param>
+        /// <returns>Dados do jogo.</returns>
+        /// <response code="200">Jogo encontrado.</response>
+        /// <response code="204">Jogo não encontrado.</response>
+        /// <response code="400">Erro ao buscar o jogo.</response>
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<Jogo>> GetJogo(Guid id)
+        public async Task<ActionResult<JogoModel>> BuscarPorId(Guid id)
         {
-            return NoContent();
+            try
+            {
+                var jogo = await _jogoService.BuscarPorIdAsync(id);
+                return jogo != null ? Ok(jogo) : NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao buscar jogo por ID.");
+                return BadRequest("Erro ao buscar jogo.");
+            }
         }
 
-        // POST /api/jogos
+        /// <summary>
+        /// Cadastra um novo jogo.
+        /// </summary>
+        /// <param name="jogo">Dados do jogo a ser cadastrado.</param>
+        /// <returns>Jogo cadastrado.</returns>
+        /// <response code="200">Jogo cadastrado com sucesso.</response>
+        /// <response code="400">Erro ao cadastrar o jogo.</response>
         [HttpPost]
         [Authorize(Roles = "Administrador")]
-        public async Task<ActionResult<Jogo>> PostJogo(Jogo jogo)
+        public async Task<ActionResult<JogoModel>> Salvar([FromBody] JogoModel jogo)
         {
-            return NoContent();
+            try
+            {
+                await _jogoService.SalvarAsync(jogo);
+                return Ok(jogo);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao cadastrar jogo.");
+                return BadRequest("Erro ao cadastrar jogo.");
+            }
         }
 
-        // PUT /api/jogos/{id}
+        /// <summary>
+        /// Atualiza os dados de um jogo existente.
+        /// </summary>
+        /// <param name="id">Identificador do jogo a ser alterado.</param>
+        /// <param name="jogo">Novos dados do jogo.</param>
+        /// <returns>Status da operação.</returns>
+        /// <response code="200">Jogo atualizado com sucesso.</response>
+        /// <response code="204">Jogo não encontrado.</response>
+        /// <response code="400">Erro ao atualizar o jogo.</response>
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> PutJogo(Guid id, Jogo jogo)
+        public async Task<IActionResult> Alterar(Guid id, [FromBody] JogoModel jogo)
         {
-            return NoContent();
+            try
+            {
+                var existente = await _jogoService.BuscarPorIdAsync(id);
+                if (existente == null)
+                    return NoContent();
+
+                jogo.Id = id;
+                var atualizado = await _jogoService.AlterarAsync(jogo);
+                return Ok(atualizado);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao atualizar jogo.");
+                return BadRequest("Erro ao atualizar jogo.");
+            }
         }
 
-        // DELETE /api/jogos/{id}
+        /// <summary>
+        /// Remove um jogo existente.
+        /// </summary>
+        /// <param name="id">Identificador do jogo a ser removido.</param>
+        /// <returns>Status da operação.</returns>
+        /// <response code="200">Jogo removido com sucesso.</response>
+        /// <response code="204">Jogo não encontrado.</response>
+        /// <response code="400">Erro ao remover o jogo.</response>
         [HttpDelete("{id}")]
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> DeleteJogo(Guid id)
+        public async Task<IActionResult> Deletar(Guid id)
         {
+            try
+            {
+                var existente = await _jogoService.BuscarPorIdAsync(id);
+                if (existente == null)
+                    return NoContent();
 
-            return NoContent();
+                var resultado = await _jogoService.DeletarAsync(id);
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao remover jogo.");
+                return BadRequest("Erro ao remover jogo.");
+            }
         }
     }
 }

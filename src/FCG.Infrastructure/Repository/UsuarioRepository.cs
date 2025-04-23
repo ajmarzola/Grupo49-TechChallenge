@@ -35,6 +35,20 @@ namespace FCG.Infrastructure.Repository
             }
         }
 
+        public async Task<Usuario> BuscarUsuarioEmailAsync(string email)
+        {
+            try
+            {
+                return await _context.Usuarios.FirstOrDefaultAsync(f => f.Email == email);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarUsuarioEmailAsync), ex.Message);
+                throw;
+            }
+           
+        }
+
         public async Task<Usuario> BuscarUsuarioIdAsync(Guid id)
         {
             try
@@ -43,7 +57,7 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarPorIdAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarUsuarioIdAsync), ex.Message);
                 throw;
             }
         }
@@ -101,7 +115,7 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListarAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListaUsuariosAsync), ex.Message);
                 throw;
             }
         }

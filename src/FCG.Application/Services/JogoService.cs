@@ -71,7 +71,19 @@ namespace FCG.Domain.Services
 
         public IList<Jogo> Converter(IList<JogoModel> model)
         {
-            ArgumentNullException.ThrowIfNull(model);
+            //ArgumentNullException.ThrowIfNull(model);
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> DeletarAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IList<JogoModel>> ListarAsync()
+        {
+            throw new NotImplementedException();
+        }
 
         public Task<bool> SalvarAsync(JogoModel model)
         {

@@ -84,6 +84,28 @@ namespace FCG.Infrastructure.Repository
             }
         }
 
+        public async Task<bool> DeletarUsuarioAsync(Guid id)
+        {
+            try
+            {
+                var usuario = await _context.Usuarios.FindAsync(id);
+
+                if (usuario != null)
+                {
+                    _context.Usuarios.Remove(usuario);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarUsuarioAsync), ex.Message);
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<Usuario>> ListaUsuariosAsync()
         {
             try
@@ -97,7 +119,7 @@ namespace FCG.Infrastructure.Repository
             }
         }
 
-        public async Task<bool> SalvarUsuarioAsync(Usuario usuario)
+        public async Task<bool> SalvarAsync(Usuario usuario)
         {
             try
             {
@@ -110,6 +132,11 @@ namespace FCG.Infrastructure.Repository
                 _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarUsuarioAsync), ex.Message);
                 return false;
             }
+        }
+
+        public Task<bool> SalvarUsuarioAsync(Usuario usuario)
+        {
+            throw new NotImplementedException();
         }
     }
 }

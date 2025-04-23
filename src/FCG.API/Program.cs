@@ -11,6 +11,11 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Microsoft.AspNetCore.Http;
+using FCG.Application.Services;
+using FCG.Domain.Services;
+using FCG.Domain.Repository;
+using FCG.Infrastructure.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +31,9 @@ builder.Services.AddGraphQLServer()
     .AddProjections();
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddTransient<IJogoService>();
+
 // 3. JWT
 var jwtKey = builder.Configuration["Jwt:SecretKey"] ?? "sua-chave-super-secreta";
 var key = Encoding.ASCII.GetBytes(jwtKey);

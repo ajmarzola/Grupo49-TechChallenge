@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FCG.Domain.Services
 {
-    internal class JogoService : IJogoService
+    public class JogoService : IJogoService
     {
         private readonly IJogoRepository _jogoRepository;
 
@@ -19,12 +19,12 @@ namespace FCG.Domain.Services
 
         public Task<bool> AlterarAsync(JogoModel model)
         {
-            return _jogoRepository.AlterarAsync(Converter(model));
+            return _jogoRepository.AlterarJogoAsync(Converter(model));
         }
 
         public Task<JogoModel> BuscarPorIdAsync(Guid id)
         {
-            return _jogoRepository.BuscarPorIdAsync(id).ContinueWith(t => Converter(t.Result));
+            return _jogoRepository.BuscarJogoIdAsync(id).ContinueWith(t => Converter(t.Result));
         }
 
         public Jogo Converter(JogoModel model)
@@ -85,17 +85,22 @@ namespace FCG.Domain.Services
 
         public Task<bool> DeletarAsync(Guid id)
         {
-            return _jogoRepository.DeletarAsync(id);
+            return _jogoRepository.DeletarJogoAsync(id);
         }
 
         public Task<IList<JogoModel>> ListarAsync()
         {
-            return _jogoRepository.ListarAsync().ContinueWith(t => Converter(t.Result));
+            return _jogoRepository.ListaJogoAsync().ContinueWith(t => Converter(t.Result));
+        }
+
+        private IList<JogoModel> Converter(object result)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<bool> SalvarAsync(JogoModel model)
         {
-            return _jogoRepository.SalvarAsync(Converter(model));
+            return _jogoRepository.SalvarJogoAsync(Converter(model));
         }
     }
 }

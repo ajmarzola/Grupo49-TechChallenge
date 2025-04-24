@@ -11,6 +11,8 @@ using System;
 using FCG.Application.DTOs;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using FCG.Application.Services;
+using System.Threading.Tasks;
 
 namespace FCG.API
 {
@@ -21,33 +23,30 @@ namespace FCG.API
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthController> _logger;
+        private readonly IUsuarioService _usuarioService;
 
-        public AuthController(AppDbContext context, IConfiguration configuration, ILogger<AuthController> logger)
+        public AuthController(AppDbContext context, 
+            IConfiguration configuration, 
+            ILogger<AuthController> logger,
+            IUsuarioService usuarioService)
         {
             _context = context;
             _configuration = configuration;
             _logger = logger;
+            _usuarioService = usuarioService;
         }
 
         [HttpPost("registro")]
-        public IActionResult Registrar([FromBody] UsuarioRegistroModel dto)
+        public async Task<IActionResult> Registrar([FromBody] UsuarioRegistroModel dto)
         {
             try
             {
-                if (_context.Usuarios.Any(u => u.Email == dto.Email))
+                var _usuario = await _usuarioService.BuscarUsuarioEmailAsync(dto.Email);
+                if (_usuario != null)
                     return BadRequest("Usuário já cadastrado.");
 
-                var usuario = new Usuario
-                {
-                    Id = Guid.NewGuid(),
-                    Nome = dto.Nome,
-                    Email = dto.Email,
-                    Senha = BCrypt.Net.BCrypt.HashPassword(dto.Senha),
-                    Role = dto.Role
-                };
-
-                _context.Usuarios.Add(usuario);
-                _context.SaveChanges();
+                if(! await _usuarioService.SalvarUsuarioAsync(dto))
+                    return BadRequest(" Não foi possível cadastrar Usuário.");
 
                 return Ok("Usuário registrado com sucesso.");
             }
@@ -60,11 +59,11 @@ namespace FCG.API
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] UsuarioLoginModel dto)
+        public async Task<IActionResult> Login([FromBody] UsuarioLoginModel dto)
         {
             try
             {
-                var usuario = _context.Usuarios.FirstOrDefault(u => u.Email == dto.Email);
+                var usuario = await _usuarioService.BuscarUsuarioEmailAsync(dto.Email);
                 if (usuario == null || !BCrypt.Net.BCrypt.Verify(dto.Senha, usuario.Senha))
                     return Unauthorized("Credenciais inválidas.");
 

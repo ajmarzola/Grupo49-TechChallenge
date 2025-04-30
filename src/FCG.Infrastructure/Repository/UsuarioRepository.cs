@@ -19,8 +19,7 @@ namespace FCG.Infrastructure.Repository
             _context = context;
             _logger = logger;
         }
-
-        public async Task<bool> AlterarAsync(Usuario usuario)
+        public async Task<bool> AlterarUsuarioAsync(Usuario usuario)
         {
             try
             {
@@ -30,12 +29,23 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AlterarAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AlterarUsuarioAsync), ex.Message);
                 return false;
             }
         }
-
-        public async Task<Usuario> BuscarPorIdAsync(Guid id)
+        public async Task<Usuario> BuscarUsuarioEmailAsync(string email)
+        {
+            try
+            {
+                return await _context.Usuarios.FirstOrDefaultAsync(x => x.Email == email);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarUsuarioEmailAsync), ex.Message);
+                throw;
+            }
+        }
+        public async Task<Usuario> BuscarUsuarioIdAsync(Guid id)
         {
             try
             {
@@ -43,12 +53,11 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarPorIdAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarUsuarioIdAsync), ex.Message);
                 throw;
             }
         }
-
-        public async Task<bool> DeletarAsync(Guid id)
+        public async Task<bool> DeletarUsuarioAsync(Guid id)
         {
             try
             {
@@ -66,12 +75,11 @@ namespace FCG.Infrastructure.Repository
             catch (Exception ex)
             {
 
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarUsuarioAsync), ex.Message);
                 return false;
             }
         }
-
-        public async Task<IList<Usuario>> ListarAsync()
+        public async Task<IEnumerable<Usuario>> ListaUsuariosAsync()
         {
             try
             {
@@ -79,12 +87,11 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListarAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListaUsuariosAsync), ex.Message);
                 throw;
             }
         }
-
-        public async Task<bool> SalvarAsync(Usuario usuario)
+        public async Task<bool> SalvarUsuarioAsync(Usuario usuario)
         {
             try
             {
@@ -94,9 +101,10 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarUsuarioAsync), ex.Message);
                 return false;
             }
         }
+
     }
 }

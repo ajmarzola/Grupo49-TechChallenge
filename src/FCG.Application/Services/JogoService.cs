@@ -1,5 +1,4 @@
-﻿using Azure;
-using FCG.Application.Model;
+﻿using FCG.Application.Model;
 using FCG.Application.Services;
 using FCG.Domain.Entities;
 using FCG.Domain.Repository;
@@ -18,76 +17,90 @@ namespace FCG.Domain.Services
             _jogoRepository = jogoRepository;
         }
 
-        public async Task<bool> AlterarAsync(Jogo jogo)
+        public Task<bool> AlterarAsync(JogoModel model)
         {
-            try
-            {
-                return await _jogoRepository.AlterarAsync(jogo);
-               
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            return _jogoRepository.AlterarJogoAsync(Converter(model));
         }
 
-        public Task<Jogo> BuscarPorIdAsync(Guid id)
+        public Task<JogoModel> BuscarPorIdAsync(Guid id)
         {
-            try
-            {
-                var jogo = _jogoRepository.BuscarPorIdAsync(id);
-
-                if (jogo == null)
-                {
-                    throw new KeyNotFoundException($"Jogo {jogo} não encontroado.");
-                }
-
-                return jogo;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            return _jogoRepository.BuscarJogoIdAsync(id).ContinueWith(t => Converter(t.Result));
         }
 
-        public async Task<bool> DeletarAsync(Guid id)
+        public Jogo Converter(JogoModel model)
         {
-            try
+            ArgumentNullException.ThrowIfNull(model);
+
+            return new Jogo
             {
-                return await _jogoRepository.DeletarAsync(id);
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+                Id = model.Id,
+                Nome = model.Nome,
+                Descricao = model.Descricao,
+                Preco = model.Preco,
+                Categoria = model.Categoria
+            };
         }
 
-        public async Task<IList<Jogo>> ListarAsync()
+        public JogoModel Converter(Jogo model)
         {
-            IList<Jogo> ListJogos = [];
+            ArgumentNullException.ThrowIfNull(model);
 
-            try
+            return new JogoModel
             {
-                ListJogos =  await _jogoRepository.ListarAsync();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return ListJogos;
+                Id = model.Id,
+                Nome = model.Nome,
+                Descricao = model.Descricao,
+                Preco = model.Preco,
+                Categoria = model.Categoria
+            };
         }
 
-        public async Task<bool> SalvarAsync(Jogo model)
+        public IList<JogoModel> Converter(IList<Jogo> model)
         {
-            try
+            ArgumentNullException.ThrowIfNull(model);
+
+            var jogoModels = new List<JogoModel>();
+
+            foreach (var jogo in model)
             {
-                return await _jogoRepository.SalvarAsync(model);
+                jogoModels.Add(Converter(jogo));
             }
-            catch (Exception ex)
+
+            return jogoModels;
+        }
+
+        public IList<Jogo> Converter(IList<JogoModel> model)
+        {
+            ArgumentNullException.ThrowIfNull(model);
+
+            var jogos = new List<Jogo>();
+
+            foreach (var jogoModel in model)
             {
-                return false;
+                jogos.Add(Converter(jogoModel));
             }
+
+            return jogos;
+        }
+
+        public Task<bool> DeletarAsync(Guid id)
+        {
+            return _jogoRepository.DeletarJogoAsync(id);
+        }
+
+        public Task<IList<JogoModel>> ListarAsync()
+        {
+            return _jogoRepository.ListaJogoAsync().ContinueWith(t => Converter(t.Result));
+        }
+
+        private IList<JogoModel> Converter(object result)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> SalvarAsync(JogoModel model)
+        {
+            return _jogoRepository.SalvarJogoAsync(Converter(model));
         }
     }
 }

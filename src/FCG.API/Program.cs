@@ -20,14 +20,24 @@ using FCG.Infrastructure.Repository;
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Conexão com LocalDB
-builder.Services.AddPooledDbContextFactory<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddPooledDbContextFactory<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
+builder.Services.AddScoped<IJogoRepository, JogoRepository>();
+builder.Services.AddScoped<IJogoService, JogoService>();
+
+builder.Services.AddScoped<IPromocaoRepository, PromocaoRepository>();
+builder.Services.AddScoped<IPromocaoService, PromocaoService>();
 
 // 2. Configuração do GraphQL
 builder.Services.AddGraphQLServer().AddQueryType<Queries>().AddFiltering().AddSorting().AddProjections();
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddTransient<IJogoService>();
 
 // 3. JWT
 var jwtKey = builder.Configuration["Jwt:SecretKey"] ?? "sua-chave-super-secreta";
@@ -102,7 +112,7 @@ app.UseMiddleware<FCG.API.Middlewares.ErrorHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapGraphQL("/graphql");
-
+app.MapControllers();
 #region Start
 
 app.MapGet("/", () => Results.Content(@"<!DOCTYPE html>

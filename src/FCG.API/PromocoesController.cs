@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
+using FCG.API.Controllers;
+using FCG.Application.Services;
+using Microsoft.Extensions.Logging;
+using FCG.Application.Model;
+using System.Reflection;
 
 namespace FCG.API
 {
@@ -15,9 +20,13 @@ namespace FCG.API
     [Route("api/[controller]")]
     public class PromocoesController : ControllerBase
     {
-        public PromocoesController()
+        private readonly IPromocaoService _promocaoService;
+        private readonly ILogger<PromocoesController> _logger;
+
+        public PromocoesController(IPromocaoService promocaoService, ILogger<PromocoesController> logger)
         {
-            
+            _promocaoService = promocaoService;
+            _logger = logger;
         }
 
         // GET: /api/promocoes
@@ -25,24 +34,44 @@ namespace FCG.API
         [Authorize]
         public async Task<ActionResult<IEnumerable<Promocao>>> Get()
         {
-            //var hoje = DateTime.UtcNow;
-            //return await _context.Promocoes
-            //    .Where(p => p.DataInicio <= hoje && p.DataFim >= hoje)
-            //    .Include(p => p.Jogo)
-            //    .ToListAsync();
-            return Ok();
+            try
+            {
+                var promocoes = await _promocaoService.ListarAsync();
+                return Ok(promocoes);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao listar promocoes.");
+                return BadRequest("Erro ao listar promocoes.");
+            }
         }
 
         // POST: /api/promocoes
         [HttpPost]
         [Authorize(Roles = "Administrador")]
-        public async Task<ActionResult<Promocao>> Post([FromBody] Promocao promocao)
+        public async Task<ActionResult<Promocao>> Post([FromBody] PromocaoModel promocao)
         {
-            //promocao.Id = Guid.NewGuid();
-            //_context.Promocoes.Add(promocao);
-            //await _context.SaveChangesAsync();
-            //return CreatedAtAction(nameof(GetById), new { id = promocao.Id }, promocao);
-            return Ok();
+            promocao.Id = Guid.NewGuid();
+
+            try
+            {
+                var RegisterPromocoes = await _promocaoService.SalvarAsync(promocao);
+
+                if (RegisterPromocoes)
+                {
+                    return StatusCode(StatusCodes.Status200OK, "Promoção cadastrada com sucesso");
+                }
+                else 
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Ops, alguma coisa deu errada ao cadastrar promoção");
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao cadastrar promocao.");
+                return BadRequest("Erro ao cadastrar promocao.");
+            }
         }
 
         // GET: /api/promocoes/{id}

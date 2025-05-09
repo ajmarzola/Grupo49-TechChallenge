@@ -79,26 +79,28 @@ namespace FCG.API
         [Authorize]
         public async Task<ActionResult<Promocao>> GetById(Guid id)
         {
-            //var promocao = await _context.Promocoes
-            //    .Include(p => p.Jogo)
-            //    .FirstOrDefaultAsync(p => p.Id == id);
 
-            //if (promocao == null) return NotFound();
-            //return promocao;
-            return Ok();
+            var promocao = await _promocaoService.BuscarPorIdAsync(id);
+            return Ok(promocao);
         }
 
         // PUT: /api/promocoes/{id}
         [HttpPut("{id}")]
         [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] Promocao input)
+        public async Task<IActionResult> Put(Guid id, [FromBody] PromocaoModel input)
         {
-            //if (id != input.Id) return BadRequest();
+            if (id != input.Id)
+                return BadRequest("O ID da URL não corresponde ao ID do corpo da requisição.");
 
-            //_context.Entry(input).State = EntityState.Modified;
-            //await _context.SaveChangesAsync();
-            //return NoContent();
-            return Ok();
+            var existing = await _promocaoService.BuscarPorIdAsync(id);
+            if (existing == null)
+                return NotFound();
+
+            var result = await _promocaoService.AlterarAsync(input);
+            if (!result)
+                return StatusCode(500, "Erro ao atualizar a promoção.");
+
+            return NoContent();
         }
 
         // DELETE: /api/promocoes/{id}
@@ -106,13 +108,15 @@ namespace FCG.API
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            //var promocao = await _context.Promocoes.FindAsync(id);
-            //if (promocao == null) return NotFound();
+            var existing = await _promocaoService.BuscarPorIdAsync(id);
+            if (existing == null)
+                return NotFound();
 
-            //_context.Promocoes.Remove(promocao);
-            //await _context.SaveChangesAsync();
-            //return NoContent();
-            return Ok();
+            var result = await _promocaoService.DeletarAsync(id);
+            if (!result)
+                return StatusCode(500, "Erro ao deletar a promoção.");
+
+            return NoContent();
         }
     }
 }

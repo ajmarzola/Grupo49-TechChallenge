@@ -18,15 +18,43 @@ namespace FCG.Application.Services
             _promocaoRepository = promocaoRepository;
 
         }
-        public Task<bool> AlterarAsync(PromocaoModel model)
+        public async Task<bool> AlterarAsync(PromocaoModel model)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var existente = await _promocaoRepository.BuscarPorIdAsync(model.Id);
+
+                if (existente == null)
+                    throw new KeyNotFoundException($"Promoção com ID {model.Id} não encontrada para atualização.");
+
+                var entity = Converter(model);
+                return await _promocaoRepository.AlterarAsync(entity);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Erro ao alterar promoção: {ex.Message}", ex);
+            }
         }
 
-        public Task<PromocaoModel> BuscarPorIdAsync(Guid id)
+        public async Task<PromocaoModel> BuscarPorIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var promocao = await _promocaoRepository.BuscarPorIdAsync(id);
+
+                if (promocao == null)
+                {
+                    throw new KeyNotFoundException($"Promoção com ID {id} não encontrada.");
+                }
+
+                return Converter(promocao);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Erro ao buscar promoção por ID: {ex.Message}", ex);
+            }
         }
+
         //AQUI
         public Promocao Converter(PromocaoModel model)
         {
@@ -71,8 +99,7 @@ namespace FCG.Application.Services
                     Nome = model.Jogo.Nome,
                     Descricao = model.Jogo.Descricao,
                     Preco = model.Jogo.Preco,
-                    Categoria = model.Jogo.Categoria
-                    // Add Promocoes or Compras only if needed
+                    Categoria = model.Jogo.Categoria                
                 }
             };
         }
@@ -87,9 +114,21 @@ namespace FCG.Application.Services
             return model.Select(Converter).ToList();
         }
 
-        public Task<bool> DeletarAsync(Guid id)
+        public async Task<bool> DeletarAsync(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var existente = await _promocaoRepository.BuscarPorIdAsync(id);
+
+                if (existente == null)
+                    throw new KeyNotFoundException($"Promoção com ID {id} não encontrada para exclusão.");
+
+                return await _promocaoRepository.DeletarAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Erro ao deletar promoção: {ex.Message}", ex);
+            }
         }
 
         public async Task<IList<PromocaoModel>> ListarAsync()

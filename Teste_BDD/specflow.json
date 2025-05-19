@@ -1,0 +1,8 @@
+{
+  "unitTestProvider": {
+    "name": "xUnit"
+  },
+  "language": {
+    "feature": "pt-BR"
+  }
+}

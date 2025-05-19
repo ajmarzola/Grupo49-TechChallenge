@@ -32,32 +32,38 @@ namespace FCG.API
         {
             try
             {
-                var jogos = await _usuarioService.ListaUsuariosAsync();
-                return Ok(jogos);
+  
+                var usuarios = await _usuarioService.ListaUsuariosAsync();
+                return Ok(usuarios);  
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao listar Usuário.");
-                return BadRequest("Erro ao listar jogos.");
+                _logger.LogError(ex, "Erro ao listar Usuários.");
+                return BadRequest("Erro ao listar usuários.");
             }
         }
+
 
 
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<JogoModel>> BuscarPorId(Guid id)
+        public async Task<ActionResult<UsuarioRegistroModel>> BuscarPorId(Guid id)
         {
             try
             {
                 var usuario = await _usuarioService.BuscarUsuarioIdAsync(id);
-                return usuario != null ? Ok(usuario) : NoContent();
+                if (usuario == null)
+                    return NotFound();
+
+                return Ok(usuario);  
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao buscar Usuario por ID.");
-                return BadRequest("Erro ao buscar Usuario.");
+                _logger.LogError(ex, "Erro ao buscar usuário por ID.");
+                return BadRequest("Erro ao buscar usuário.");
             }
         }
+
 
         [HttpPost]
         [Authorize(Roles = "Administrador")]

@@ -10,11 +10,11 @@ namespace FCG.Application.Services
 {
     public interface IUsuarioService
     {
-        Task<UsuarioRegistroModel> BuscarUsuarioIdAsync(Guid id);
-        Task<UsuarioRegistroModel> BuscarUsuarioEmailAsync(string email);
-        Task<IEnumerable<UsuarioRegistroModel>> ListaUsuariosAsync();
+        Task<Usuario> BuscarUsuarioIdAsync(Guid id);
+        Task<Usuario> BuscarUsuarioEmailAsync(string email);
+        Task<IEnumerable<Usuario>> ListaUsuariosAsync();
         Task<bool> SalvarUsuarioAsync(UsuarioRegistroModel usuario);
-        Task<bool> AlterarUsuarioAsync(UsuarioRegistroModel usuario);
+        Task<bool> AlterarAsync(UsuarioRegistroModel usuario);
         Task<bool> DeletarUsuarioAsync(Guid id);
     }
 }

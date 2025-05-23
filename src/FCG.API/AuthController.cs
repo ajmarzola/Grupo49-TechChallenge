@@ -20,17 +20,13 @@ namespace FCG.API
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly ILogger<AuthController> _logger;
         private readonly IUsuarioService _usuarioService;
 
-        public AuthController(AppDbContext context, 
-            IConfiguration configuration, 
-            ILogger<AuthController> logger,
-            IUsuarioService usuarioService)
+        public AuthController(IConfiguration configuration, 
+            ILogger<AuthController> logger, IUsuarioService usuarioService)
         {
-            _context = context;
             _configuration = configuration;
             _logger = logger;
             _usuarioService = usuarioService;
@@ -42,18 +38,18 @@ namespace FCG.API
             try
             {
                 var _usuario = await _usuarioService.BuscarUsuarioEmailAsync(dto.Email);
-                if (_usuario != null)
+                if(_usuario != null)
                     return BadRequest("Usuário já cadastrado.");
 
                 if(! await _usuarioService.SalvarUsuarioAsync(dto))
-                    return BadRequest(" Não foi possível cadastrar Usuário.");
+                    return BadRequest("Não foi possível cadastrar Usuário.");
 
                 return Ok("Usuário registrado com sucesso.");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erro ao registrar o usuário: {Nome} com email: {Email}", dto.Nome, dto.Email);
-                return BadRequest();
+                return BadRequest("Não foi possível cadastrar Usuário.");
             }
             
         }
@@ -85,6 +81,52 @@ namespace FCG.API
                 var token = tokenHandler.CreateToken(tokenDescriptor);
 
                 return Ok(new { token = tokenHandler.WriteToken(token) });
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Erro ao registrar o usuário com email: {Email}", dto.Email);
+                return BadRequest();
+            }
+
+        }
+
+        [HttpDelete("DeletarUsuario")]
+        public async Task<IActionResult> DeletarUsuario([FromBody] Guid id)
+        {
+            try
+            {
+                var usuario = await _usuarioService.BuscarUsuarioIdAsync(id);
+                if (usuario == null)
+                    return Unauthorized("Credenciais inválidas.");
+
+                if(! await _usuarioService.DeletarUsuarioAsync(id))
+                    return BadRequest("Não foi possível deletar Usuário.");
+
+                return Ok("Usuário deletado com sucesso.");
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Erro ao registrar o usuário com id: {id}", id);
+                return BadRequest();
+            }
+
+        }
+
+        [HttpPut("AlteraUsuario")]
+        public async Task<IActionResult> AlteraUsuario([FromBody] UsuarioRegistroModel dto)
+        {
+            try
+            {
+                var usuario = await _usuarioService.BuscarUsuarioEmailAsync(dto.Email);
+                if (usuario == null )
+                    return Unauthorized("Credenciais inválidas.");
+
+                if(! await _usuarioService.AlterarAsync(dto))
+                    return BadRequest("Não foi possível alterar Usuário.");
+
+                return Ok("Usuário alterado com sucesso.");
             }
             catch (Exception ex)
             {

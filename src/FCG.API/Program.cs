@@ -20,25 +20,14 @@ using FCG.Infrastructure.Repository;
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Conexão com LocalDB
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddPooledDbContextFactory<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // 2. Configuração do GraphQL
 builder.Services.AddGraphQLServer().AddQueryType<Queries>().AddFiltering().AddSorting().AddProjections();
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddTransient<IJogoService, JogoService>();
-//builder.Services.AddTransient<IJogoService>();
-//builder.Services.AddTransient<IJogoService>();
-
-builder.Services.AddTransient<ICompraRepository, CompraRepository>();
-builder.Services.AddTransient<IJogoRepository,JogoRepository>();
-builder.Services.AddTransient<IPromocaoRepository, PromocaoRepository>();
-builder.Services.AddTransient<IUsuarioRepository, UsuarioRepository>();
-
-
+builder.Services.AddTransient<IJogoService>();
 
 // 3. JWT
 var jwtKey = builder.Configuration["Jwt:SecretKey"] ?? "sua-chave-super-secreta";

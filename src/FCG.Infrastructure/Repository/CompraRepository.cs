@@ -20,7 +20,7 @@ namespace FCG.Infrastructure.Repository
             _logger = logger;
         }
 
-        public async Task<Compra> BuscarCompraPorIdAsync(Guid id)
+        public async Task<Compra> BuscarPorIdAsync(Guid id)
         {
             try
             {
@@ -28,12 +28,12 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarCompraPorIdAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarPorIdAsync), ex.Message);
                 throw;
             }
         }
 
-        public async Task<IList<Compra>> ListarCompraAsync()
+        public async Task<IList<Compra>> ListarAsync()
         {
             try
             {
@@ -41,12 +41,12 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListarCompraAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListarAsync), ex.Message);
                 throw;
             }
         }
 
-        public async Task<bool> SalvarCompraAsync(Compra compra)
+        public async Task<bool> SalvarAsync(Compra compra)
         {
             try
             {
@@ -56,12 +56,12 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarCompraAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarAsync), ex.Message);
                 return false;
             }
         }
 
-        public async Task<bool> AlterarCompraAsync(Compra compra)
+        public async Task<bool> AlterarAsync(Compra compra)
         {
             try
             {
@@ -71,12 +71,12 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AlterarCompraAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AlterarAsync), ex.Message);
                 return false;
             }
         }
 
-        public async Task<bool> DeletarCompraAsync(Guid id)
+        public async Task<bool> DeletarAsync(Guid id)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarCompraAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarAsync), ex.Message);
                 return false;
             }
         }

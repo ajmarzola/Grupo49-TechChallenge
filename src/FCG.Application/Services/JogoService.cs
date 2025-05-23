@@ -19,12 +19,12 @@ namespace FCG.Domain.Services
 
         public Task<bool> AlterarAsync(JogoModel model)
         {
-            return _jogoRepository.AlterarJogoAsync(Converter(model));
+            return _jogoRepository.AlterarAsync(Converter(model));
         }
 
         public Task<JogoModel> BuscarPorIdAsync(Guid id)
         {
-            return _jogoRepository.BuscarJogoIdAsync(id).ContinueWith(t => Converter(t.Result));
+            return _jogoRepository.BuscarPorIdAsync(id).ContinueWith(t => Converter(t.Result));
         }
 
         public Jogo Converter(JogoModel model)
@@ -71,36 +71,23 @@ namespace FCG.Domain.Services
 
         public IList<Jogo> Converter(IList<JogoModel> model)
         {
-            ArgumentNullException.ThrowIfNull(model);
-
-            var jogos = new List<Jogo>();
-
-            foreach (var jogoModel in model)
-            {
-                jogos.Add(Converter(jogoModel));
-            }
-
-            return jogos;
+            //ArgumentNullException.ThrowIfNull(model);
+            throw new NotImplementedException();
         }
 
         public Task<bool> DeletarAsync(Guid id)
         {
-            return _jogoRepository.DeletarJogoAsync(id);
+            throw new NotImplementedException();
         }
 
         public Task<IList<JogoModel>> ListarAsync()
-        {
-            return _jogoRepository.ListaJogoAsync().ContinueWith(t => Converter(t.Result));
-        }
-
-        private IList<JogoModel> Converter(object result)
         {
             throw new NotImplementedException();
         }
 
         public Task<bool> SalvarAsync(JogoModel model)
         {
-            return _jogoRepository.SalvarJogoAsync(Converter(model));
+            return _jogoRepository.SalvarAsync(Converter(model));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FCG.Application.DTOs;
 using FCG.Domain.Entities;
 using FCG.Domain.Repository;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,62 +13,44 @@ namespace FCG.Application.Services
 {
     public class UsuarioService : IUsuarioService
     {
-        private readonly ILogger<UsuarioService> _logger;
         private readonly IUsuarioRepository _usuarioRepository;
-        public UsuarioService(ILogger<UsuarioService> logger, IUsuarioRepository usuarioRepository)
-        { 
-            _logger = logger;
+        private readonly ILogger<UsuarioService> _logger;
+
+        public UsuarioService(IUsuarioRepository usuarioRepository, ILogger<UsuarioService> logger )
+        {
             _usuarioRepository = usuarioRepository;
+            _logger = logger;
         }
-        public async Task<bool> AlterarUsuarioAsync(UsuarioRegistroModel model)
+        public async Task<bool> AlterarAsync(UsuarioRegistroModel usuarioModel)
         {
             try
             {
-                var _usuario = await _usuarioRepository.BuscarUsuarioEmailAsync(model.Email);
-                if (_usuario == null) 
+                var _usuario = await BuscarUsuarioIdAsync(usuarioModel.Id);
+                if (_usuario == null)
                     return false;
 
-                var usuario = await ConverteModelParaEntidade(model);
-                return await _usuarioRepository.AlterarUsuarioAsync(usuario);
+                var usuario = new Usuario
+                {
+                    Nome = usuarioModel.Nome,
+                    Email = usuarioModel.Email,
+                    Senha = BCrypt.Net.BCrypt.HashPassword(usuarioModel.Senha),
+                    Role = usuarioModel.Role
+                };
+                return await _usuarioRepository.AlterarAsync(usuario);
 
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AlterarUsuarioAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AlterarAsync), ex.Message);
                 throw;
             }
         }
 
-        private async Task<Usuario> ConverteModelParaEntidade(UsuarioRegistroModel model)
-        {
-            return new Usuario
-            {
-                Nome = model.Nome,
-                Email = model.Email,
-                Senha = model.Senha,
-                Role = model.Role,
-            };
-        }
-        private async Task<UsuarioRegistroModel> ConverteEntidadeParaModel(Usuario model)
-        {
-            return new UsuarioRegistroModel
-            {
-                Nome = model.Nome,
-                Email = model.Email,
-                Senha = model.Senha,
-                Role = model.Role,
-            };
-        }
-
-        public async Task<UsuarioRegistroModel> BuscarUsuarioEmailAsync(string email)
+        public Task<Usuario> BuscarUsuarioEmailAsync(string email)
         {
             try
             {
-                var _usuario = await _usuarioRepository.BuscarUsuarioEmailAsync(email);
-                if (_usuario == null)
-                    return new UsuarioRegistroModel();
-
-                return await ConverteEntidadeParaModel(_usuario);
+                return _usuarioRepository.BuscarUsuarioEmailAsync(email);
             }
             catch (Exception ex)
             {
@@ -76,15 +59,11 @@ namespace FCG.Application.Services
             }
         }
 
-        public async Task<UsuarioRegistroModel> BuscarUsuarioIdAsync(Guid id)
+        public async Task<Usuario> BuscarUsuarioIdAsync(Guid id)
         {
             try
             {
-                var _usuario = await _usuarioRepository.BuscarUsuarioIdAsync(id);
-                if (_usuario == null)
-                    return new UsuarioRegistroModel();
-
-                return await ConverteEntidadeParaModel(_usuario);
+                return await _usuarioRepository.BuscarUsuarioIdAsync(id);
             }
             catch (Exception ex)
             {
@@ -97,8 +76,8 @@ namespace FCG.Application.Services
         {
             try
             {
-                var _usuario = await _usuarioRepository.BuscarUsuarioIdAsync(id);
-                if (_usuario == null)
+                var usuario = await BuscarUsuarioIdAsync(id);
+                if (usuario == null)
                     return false;
 
                 return await _usuarioRepository.DeletarUsuarioAsync(id);
@@ -110,38 +89,35 @@ namespace FCG.Application.Services
             }
         }
 
-        public async Task<IEnumerable<UsuarioRegistroModel>> ListaUsuariosAsync()
+        public async Task<IEnumerable<Usuario>> ListaUsuariosAsync()
         {
             try
             {
-                var ListaUsuario = await _usuarioRepository.ListaUsuariosAsync();
-                var listaUsuarioModel = new List<UsuarioRegistroModel>();
-                if (ListaUsuario == null)
-                    return listaUsuarioModel;
-
-
-                foreach (var _usuario in ListaUsuario)
-                {
-                    listaUsuarioModel.Add(await ConverteEntidadeParaModel(_usuario));
-                }
-                return listaUsuarioModel;
+                return await _usuarioRepository.ListaUsuariosAsync();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarUsuarioAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListaUsuariosAsync), ex.Message);
                 throw;
             }
         }
 
-        public async Task<bool> SalvarUsuarioAsync(UsuarioRegistroModel model)
+        public async Task<bool> SalvarUsuarioAsync(UsuarioRegistroModel usuarioModel)
         {
             try
             {
-                var _usuario = await BuscarUsuarioEmailAsync(model.Email) ;
+                var _usuario = await BuscarUsuarioEmailAsync(usuarioModel.Email);
                 if (_usuario != null)
                     return false;
 
-                var usuario = await ConverteModelParaEntidade(model);
+                var usuario = new Usuario
+                {
+                    Id = Guid.NewGuid(),
+                    Nome = usuarioModel.Nome,
+                    Email = usuarioModel.Email,
+                    Senha = BCrypt.Net.BCrypt.HashPassword(usuarioModel.Senha),
+                    Role = usuarioModel.Role
+                };
                 return await _usuarioRepository.SalvarUsuarioAsync(usuario);
             }
             catch (Exception ex)

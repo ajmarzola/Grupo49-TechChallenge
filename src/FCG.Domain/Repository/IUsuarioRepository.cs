@@ -13,7 +13,7 @@ namespace FCG.Domain.Repository
         Task<Usuario> BuscarUsuarioEmailAsync(string email);
         Task<IEnumerable<Usuario>> ListaUsuariosAsync();
         Task<bool> SalvarUsuarioAsync(Usuario usuario);
-        Task<bool> AlterarUsuarioAsync(Usuario usuario);
+        Task<bool> AlterarAsync(Usuario usuario);
         Task<bool> DeletarUsuarioAsync(Guid id);
     }
 }

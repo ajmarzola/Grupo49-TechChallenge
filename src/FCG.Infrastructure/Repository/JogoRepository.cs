@@ -20,7 +20,7 @@ namespace FCG.Domain.Repository
             _logger = logger;
         }
 
-        public async Task<bool> AlterarJogoAsync(Jogo model)
+        public async Task<bool> AlterarAsync(Jogo model)
         {
             try
             {
@@ -41,12 +41,12 @@ namespace FCG.Domain.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AlterarJogoAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(AlterarAsync), ex.Message);
                 throw;
             }
         }
 
-        public async Task<Jogo> BuscarJogoIdAsync(Guid id)
+        public async Task<Jogo> BuscarPorIdAsync(Guid id)
         {
             try
             {
@@ -54,12 +54,12 @@ namespace FCG.Domain.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarJogoIdAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(BuscarPorIdAsync), ex.Message);
                 throw;
             }
         }
 
-        public async Task<bool> DeletarJogoAsync(Guid id)
+        public async Task<bool> DeletarAsync(Guid id)
         {
             try
             {
@@ -76,12 +76,12 @@ namespace FCG.Domain.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarJogoAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(DeletarAsync), ex.Message);
                 throw;
             }
         }
 
-        public async Task<IEnumerable<Jogo>> ListaJogoAsync()
+        public async Task<IList<Jogo>> ListarAsync()
         {
             try
             {
@@ -89,12 +89,12 @@ namespace FCG.Domain.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListaJogoAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(ListarAsync), ex.Message);
                 throw;
             }
         }
 
-        public async Task<bool> SalvarJogoAsync(Jogo model)
+        public async Task<bool> SalvarAsync(Jogo model)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace FCG.Domain.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarJogoAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarAsync), ex.Message);
                 throw;
             }
         }

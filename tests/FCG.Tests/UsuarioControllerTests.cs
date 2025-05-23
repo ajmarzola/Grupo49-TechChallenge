@@ -3,10 +3,12 @@ using FCG.API.Controllers;
 using FCG.Application.DTOs;
 using FCG.Application.Model;
 using FCG.Application.Services;
+using FCG.Application.Model.Extensions;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Moq.Language.Flow;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -36,7 +38,7 @@ namespace FCG.Tests
                 new UsuarioRegistroModel { Id = Guid.NewGuid(), Nome = "Rafael Nicoletti" }
             };
 
-            _mockUsuarioService.Setup(service => service.ListaUsuariosAsync()).ReturnsAsync(usuarios);
+            _mockUsuarioService.Setup(service => service.ListaUsuariosAsync()).ReturnsAsync(usuarios.Convert());
 
             // Act
             var result = await _controller.Listar();
@@ -53,7 +55,7 @@ namespace FCG.Tests
             // Arrange
             var userId = Guid.NewGuid();
             var usuario = new UsuarioRegistroModel { Id = userId, Nome = "Pedro de Lara" };
-            _mockUsuarioService.Setup(service => service.BuscarUsuarioIdAsync(userId)).ReturnsAsync(usuario);
+            _mockUsuarioService.Setup(service => service.BuscarUsuarioIdAsync(userId)).ReturnsAsync(usuario.Convert());
 
             // Act
             var result = await _controller.BuscarPorId(userId);
@@ -85,7 +87,7 @@ namespace FCG.Tests
         {
             // Arrange
             var userId = Guid.NewGuid();
-            _mockUsuarioService.Setup(service => service.BuscarUsuarioIdAsync(userId)).ReturnsAsync(new UsuarioRegistroModel { Id = userId });
+            _mockUsuarioService.Setup(service => service.BuscarUsuarioIdAsync(userId)).ReturnsAsync(new UsuarioRegistroModel { Id = userId }.Convert());
             _mockUsuarioService.Setup(service => service.DeletarUsuarioAsync(userId)).ReturnsAsync(true);
 
             // Act

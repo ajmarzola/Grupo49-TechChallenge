@@ -1,6 +1,6 @@
 ﻿using TechTalk.SpecFlow;
 using FCG.API.Controllers;
-using FCG.Application.Model;
+using FCG.Application.Model.Extensions;
 using FCG.Application.Services;
 using Moq;
 using Microsoft.Extensions.Logging;
@@ -40,7 +40,7 @@ namespace FCG.BDD.Tests
             {
                 new UsuarioRegistroModel { Id = Guid.NewGuid(), Nome = "Rafael Nicoletti" }
             };
-            _mockUsuarioService.Setup(service => service.ListaUsuariosAsync()).ReturnsAsync(usuarios);
+            _mockUsuarioService.Setup(service => service.ListaUsuariosAsync()).ReturnsAsync(usuarios.Convert());
         }
 
         [When(@"eu faço uma requisição para listar os usuários")]
@@ -61,7 +61,7 @@ namespace FCG.BDD.Tests
         public void DadoQueExisteUmUsuarioComOID(Guid userId)
         {
             _usuario = new UsuarioRegistroModel { Id = userId, Nome = "Pedro de Lara" };
-            _mockUsuarioService.Setup(service => service.BuscarUsuarioIdAsync(userId)).ReturnsAsync(_usuario);
+            _mockUsuarioService.Setup(service => service.BuscarUsuarioIdAsync(userId)).ReturnsAsync(_usuario.Convert());
         }
 
         [When(@"eu faço uma requisição para buscar o usuário com o ID ""(.*)""")]

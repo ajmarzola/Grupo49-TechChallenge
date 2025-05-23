@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using FCG.Application.DTOs;
+using FCG.Application.Model.Extensions;
 
 namespace FCG.API
 {
@@ -34,7 +35,7 @@ namespace FCG.API
             {
   
                 var usuarios = await _usuarioService.ListaUsuariosAsync();
-                return Ok(usuarios);  
+                return Ok(usuarios.Convert());  
             }
             catch (Exception ex)
             {
@@ -55,7 +56,7 @@ namespace FCG.API
                 if (usuario == null)
                     return NotFound();
 
-                return Ok(usuario);  
+                return Ok(usuario.Convert());  
             }
             catch (Exception ex)
             {
@@ -93,7 +94,7 @@ namespace FCG.API
                     return NoContent();
 
                 model.Id = id;
-                var atualizado = await _usuarioService.AlterarUsuarioAsync(model);
+                var atualizado = await _usuarioService.AlterarAsync(model);
                 return Ok(atualizado);
             }
             catch (Exception ex)

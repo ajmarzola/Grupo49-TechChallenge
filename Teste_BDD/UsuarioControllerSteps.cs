@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using FCG.API.Controllers;
 using FCG.Application.DTOs;
-using FCG.Application.Model;
+using FCG.Application.Model.Extensions;
 using FCG.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -40,7 +40,7 @@ namespace Teste_BDD
             new UsuarioRegistroModel { Id = Guid.NewGuid(), Nome = "Rafael Nicoletti" }
         };
 
-            _mockUsuarioService.Setup(s => s.ListaUsuariosAsync()).ReturnsAsync(usuarios);
+            _mockUsuarioService.Setup(s => s.ListaUsuariosAsync()).ReturnsAsync(usuarios.Convert());
         }
 
         [When("eu faço uma requisição para listar os usuários")]
@@ -61,7 +61,7 @@ namespace Teste_BDD
         public void DadoQueExisteUmUsuarioComOID(Guid id)
         {
             _usuarioEsperado = new UsuarioRegistroModel { Id = id, Nome = "Pedro de Lara" };
-            _mockUsuarioService.Setup(s => s.BuscarUsuarioIdAsync(id)).ReturnsAsync(_usuarioEsperado);
+            _mockUsuarioService.Setup(s => s.BuscarUsuarioIdAsync(id)).ReturnsAsync(_usuarioEsperado.Convert());
         }
 
         [When(@"eu faço uma requisição para buscar o usuário com o ID ""(.*)""")]

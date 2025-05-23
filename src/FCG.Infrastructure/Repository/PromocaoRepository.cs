@@ -24,7 +24,17 @@ namespace FCG.Infrastructure.Repository
         {
             try
             {
-                _context.Promocoes.Update(promocao);
+                var existente = await _context.Promocoes.FindAsync(promocao.Id);
+                if (existente == null)
+                    return false;
+
+
+                existente.Nome = promocao.Nome;
+                existente.DescontoPercentual = promocao.DescontoPercentual;
+                existente.DataInicio = promocao.DataInicio;
+                existente.DataFim = promocao.DataFim;
+                existente.JogoId = promocao.JogoId;
+
                 await _context.SaveChangesAsync();
                 return true;
             }

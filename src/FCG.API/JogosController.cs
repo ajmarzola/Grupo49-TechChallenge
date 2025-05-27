@@ -89,8 +89,7 @@ namespace FCG.API.Controllers
         {
             try
             {
-                await _jogoService.SalvarAsync(jogo);
-                return Ok(jogo);
+                return Ok(await _jogoService.SalvarAsync(jogo));
             }
             catch (Exception ex)
             {

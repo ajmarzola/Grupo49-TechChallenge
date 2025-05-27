@@ -77,12 +77,13 @@ namespace FCG.Domain.Services
 
         public Task<bool> DeletarAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return _jogoRepository.DeletarAsync(id);
         }
 
-        public Task<IList<JogoModel>> ListarAsync()
+        public async Task<IList<JogoModel>> ListarAsync()
         {
-            throw new NotImplementedException();
+            var jogos = await _jogoRepository.ListarAsync();
+            return Converter(jogos);
         }
 
         public Task<bool> SalvarAsync(JogoModel model)

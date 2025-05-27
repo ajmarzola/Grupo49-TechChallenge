@@ -19,8 +19,8 @@ namespace FCG.Application.Model
 
         public string Categoria { get; set; } = string.Empty;
 
-        public ICollection<PromocaoModel> Promocoes { get; set; } = [];
+        //public ICollection<PromocaoModel> Promocoes { get; set; } = [];
 
-        public ICollection<CompraModel> Compras { get; set; } = [];
+        //public ICollection<CompraModel> Compras { get; set; } = [];
     }
 }

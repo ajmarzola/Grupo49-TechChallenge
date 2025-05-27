@@ -120,7 +120,7 @@ namespace FCG.Infrastructure.Repository
             }
         }
 
-        public async Task<bool> SalvarAsync(Usuario usuario)
+        public async Task<bool> SalvarUsuarioAsync(Usuario usuario)
         {
             try
             {
@@ -130,14 +130,9 @@ namespace FCG.Infrastructure.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarAsync), ex.Message);
+                _logger.LogError(ex, "Erro ao registrar no método {MethodName}: {Message}", nameof(SalvarUsuarioAsync), ex.Message);
                 return false;
             }
-        }
-
-        public Task<bool> SalvarUsuarioAsync(Usuario usuario)
-        {
-            throw new NotImplementedException();
         }
     }
 }

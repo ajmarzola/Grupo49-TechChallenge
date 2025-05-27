@@ -61,11 +61,11 @@ namespace FCG.API
                 {
                     return StatusCode(StatusCodes.Status200OK, "Promoção cadastrada com sucesso");
                 }
-                else 
+                else
                 {
                     return StatusCode(StatusCodes.Status500InternalServerError, "Ops, alguma coisa deu errada ao cadastrar promoção");
                 }
-               
+
             }
             catch (Exception ex)
             {
@@ -89,18 +89,22 @@ namespace FCG.API
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Put(Guid id, [FromBody] PromocaoModel input)
         {
-            if (id != input.Id)
-                return BadRequest("O ID da URL não corresponde ao ID do corpo da requisição.");
+            try
+            {
+                if (id != input.Id)
+                    return BadRequest("O ID da URL não corresponde ao ID do corpo da requisição.");
 
-            var existing = await _promocaoService.BuscarPorIdAsync(id);
-            if (existing == null)
-                return NotFound();
+                var existing = await _promocaoService.BuscarPorIdAsync(id);
+                if (existing == null)
+                    return NotFound();
 
-            var result = await _promocaoService.AlterarAsync(input);
-            if (!result)
-                return StatusCode(500, "Erro ao atualizar a promoção.");
-
-            return NoContent();
+                return Ok(await _promocaoService.AlterarAsync(input));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao alterar promocoes.");
+                return BadRequest("Erro ao alterar promocoes.");
+            }
         }
 
         // DELETE: /api/promocoes/{id}
@@ -108,15 +112,19 @@ namespace FCG.API
         [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var existing = await _promocaoService.BuscarPorIdAsync(id);
-            if (existing == null)
-                return NotFound();
+            try
+            {
+                var existing = await _promocaoService.BuscarPorIdAsync(id);
+                if (existing == null)
+                    return NotFound();
 
-            var result = await _promocaoService.DeletarAsync(id);
-            if (!result)
-                return StatusCode(500, "Erro ao deletar a promoção.");
-
-            return NoContent();
+                return Ok(await _promocaoService.DeletarAsync(id));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao excluir promocoes.");
+                return BadRequest("Erro ao excluir promocoes.");
+            }
         }
     }
 }

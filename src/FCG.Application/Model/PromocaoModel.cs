@@ -20,7 +20,5 @@ namespace FCG.Application.Model
         public DateTime DataFim { get; set; }
 
         public Guid JogoId { get; set; }
-
-        public JogoModel? Jogo { get; set; }
     }
 }

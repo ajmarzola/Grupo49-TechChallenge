@@ -68,15 +68,7 @@ namespace FCG.Application.Services
                 DescontoPercentual = model.DescontoPercentual,
                 DataInicio = model.DataInicio,
                 DataFim = model.DataFim,
-                JogoId = model.JogoId,
-                Jogo = model.Jogo == null ? null : new Jogo
-                {
-                    Id = model.Jogo.Id,
-                    Nome = model.Jogo.Nome,
-                    Descricao = model.Jogo.Descricao,
-                    Preco = model.Jogo.Preco,
-                    Categoria = model.Jogo.Categoria                   
-                }
+                JogoId = model.JogoId
             };
         }
 
@@ -92,15 +84,7 @@ namespace FCG.Application.Services
                 DescontoPercentual = model.DescontoPercentual,
                 DataInicio = model.DataInicio,
                 DataFim = model.DataFim,
-                JogoId = model.JogoId,
-                Jogo = model.Jogo == null ? null : new JogoModel
-                {
-                    Id = model.Jogo.Id,
-                    Nome = model.Jogo.Nome,
-                    Descricao = model.Jogo.Descricao,
-                    Preco = model.Jogo.Preco,
-                    Categoria = model.Jogo.Categoria                
-                }
+                JogoId = model.JogoId
             };
         }
 

@@ -32,6 +32,11 @@ namespace FCG.API
         [HttpPost("registro")]
         public async Task<IActionResult> Registrar([FromBody] UsuarioRegistroModel dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var _usuario = await _usuarioService.BuscarUsuarioEmailAsync(dto.Email);
@@ -54,6 +59,11 @@ namespace FCG.API
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UsuarioLoginModel dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var usuario = await _usuarioService.BuscarUsuarioEmailAsync(dto.Email);

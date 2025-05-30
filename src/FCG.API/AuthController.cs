@@ -1,7 +1,4 @@
-﻿using FCG.Domain.Entities;
-using FCG.Infrastructure.Data;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,10 +6,10 @@ using System.Security.Claims;
 using System.Text;
 using System;
 using FCG.Application.DTOs;
-using System.Linq;
 using Microsoft.Extensions.Logging;
 using FCG.Application.Services;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FCG.API
 {
@@ -24,7 +21,7 @@ namespace FCG.API
         private readonly ILogger<AuthController> _logger;
         private readonly IUsuarioService _usuarioService;
 
-        public AuthController(IConfiguration configuration, 
+        public AuthController(IConfiguration configuration,
             ILogger<AuthController> logger, IUsuarioService usuarioService)
         {
             _configuration = configuration;
@@ -38,10 +35,10 @@ namespace FCG.API
             try
             {
                 var _usuario = await _usuarioService.BuscarUsuarioEmailAsync(dto.Email);
-                if(_usuario != null)
+                if (_usuario != null)
                     return BadRequest("Usuário já cadastrado.");
 
-                if(! await _usuarioService.SalvarUsuarioAsync(dto))
+                if (!await _usuarioService.SalvarUsuarioAsync(dto))
                     return BadRequest("Não foi possível cadastrar Usuário.");
 
                 return Ok("Usuário registrado com sucesso.");
@@ -51,7 +48,7 @@ namespace FCG.API
                 _logger.LogError(ex, "Erro ao registrar o usuário: {Nome} com email: {Email}", dto.Nome, dto.Email);
                 return BadRequest("Não foi possível cadastrar Usuário.");
             }
-            
+
         }
 
         [HttpPost("login")]
@@ -92,6 +89,7 @@ namespace FCG.API
         }
 
         [HttpDelete("DeletarUsuario")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> DeletarUsuario([FromBody] Guid id)
         {
             try
@@ -100,7 +98,7 @@ namespace FCG.API
                 if (usuario == null)
                     return Unauthorized("Credenciais inválidas.");
 
-                if(! await _usuarioService.DeletarUsuarioAsync(id))
+                if (!await _usuarioService.DeletarUsuarioAsync(id))
                     return BadRequest("Não foi possível deletar Usuário.");
 
                 return Ok("Usuário deletado com sucesso.");
@@ -115,15 +113,16 @@ namespace FCG.API
         }
 
         [HttpPut("AlteraUsuario")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> AlteraUsuario([FromBody] UsuarioRegistroModel dto)
         {
             try
             {
                 var usuario = await _usuarioService.BuscarUsuarioEmailAsync(dto.Email);
-                if (usuario == null )
+                if (usuario == null)
                     return Unauthorized("Credenciais inválidas.");
 
-                if(! await _usuarioService.AlterarAsync(dto))
+                if (!await _usuarioService.AlterarAsync(dto))
                     return BadRequest("Não foi possível alterar Usuário.");
 
                 return Ok("Usuário alterado com sucesso.");

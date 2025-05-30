@@ -54,7 +54,7 @@ namespace FCG.Tests
         {
             // Arrange
             var userId = Guid.NewGuid();
-            var usuario = new UsuarioRegistroModel { Id = userId, Nome = "Pedro de Lara" };
+            var usuario = new UsuarioRegistroModel { Id = userId, Nome = "Pedro de Lara", Email = "pedrolara@gmail.com", Senha = "Test@1234" };
             _mockUsuarioService.Setup(service => service.BuscarUsuarioIdAsync(userId)).ReturnsAsync(usuario.Convert());
 
             // Act
@@ -63,14 +63,14 @@ namespace FCG.Tests
             // Assert
             result.Result.Should().BeOfType<OkObjectResult>();
             var okResult = result.Result as OkObjectResult;
-            okResult.Value.Should().Be(usuario);
+            okResult.Value.Should().BeEquivalentTo(usuario);
         }
 
         [Fact]
         public async Task Salvar_ReturnsOkResult_WhenUserSavedSuccessfully()
         {
             // Arrange
-            var usuario = new UsuarioRegistroModel { Nome = "Rafael Nicoletti" };
+            var usuario = new UsuarioRegistroModel { Nome = "Rafael Nicoletti", Email = "rafael@gmail.com", Senha = "Test@1234" };
 
             // Retornando Task<bool> correto
             _mockUsuarioService.Setup(service => service.SalvarUsuarioAsync(usuario)).ReturnsAsync(true);
@@ -79,7 +79,7 @@ namespace FCG.Tests
             var result = await _controller.Salvar(usuario);
 
             // Assert
-            result.Should().BeOfType<OkObjectResult>();
+            result.Result.Should().BeOfType<OkObjectResult>();
         }
 
         [Fact]

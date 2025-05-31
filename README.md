@@ -31,6 +31,9 @@ Este MVP (Fase 1) implementa a gestão de usuários e a biblioteca de jogos adqu
      - Atualiza ou remove usuários.
 
 ## Event Storming
+
+- [Event Storming]([https://localhost:5001/swagger](https://miro.com/app/board/uXjVIG6u010=/?share_link_id=863606644000))
+
 | Fluxo                         | Comando                  | Evento                         | Regras                                                        |
 |-------------------------------|--------------------------|--------------------------------|---------------------------------------------------------------|
 | **Cadastro de Usuário**       | Cadastrar novo usuário   | Usuário cadastrado com sucesso | - Validar formato do e-mail<br>- Verificar senha segura       |
@@ -151,10 +154,7 @@ Este MVP (Fase 1) implementa a gestão de usuários e a biblioteca de jogos adqu
 ├── tests/
 │   ├── FCG.Tests.Unit/        # Testes unitários
 │   └── FCG.Tests.Integration/ # Testes de integração
-└── docs/
-    ├── event-storming.png     # Diagrama de Event Storming
-    ├── ddd-model.png          # Diagrama de Domínio DDD
-    └── arquitetura.pdf        # Documento de arquitetura do sistema
+└── docs/                      # Diagramas de Event Storming, Domain Story Telling, Testes do Postman
 ```
 
 ---
@@ -208,7 +208,7 @@ Este MVP (Fase 1) implementa a gestão de usuários e a biblioteca de jogos adqu
 Para dúvidas ou sugestões, entre em contato com qualquer um dos integrantes do grupo ou abra uma issue no repositório.
 
 ## 📎 Recursos Adicionais
-- [Documentação Swagger](https://localhost:5001/swagger)
+
 - [Diagramas e Documentos Técnicos](docs/)
 
 ---

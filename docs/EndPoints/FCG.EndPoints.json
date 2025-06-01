@@ -1,0 +1,464 @@
+{
+	"info": {
+		"_postman_id": "5ad37b8a-1336-4dd4-9088-bc9928aa9b99",
+		"name": "FCG.EndPoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34853712",
+		"_collection_link": "https://fiap-team-4018.postman.co/workspace/FIAP-TEAM-Workspace~aa407c08-57d0-4b05-abca-c66c5307b208/collection/6965411-5ad37b8a-1336-4dd4-9088-bc9928aa9b99?action=share&source=collection_link&creator=34853712"
+	},
+	"item": [
+		{
+			"name": "JOGOS",
+			"item": [
+				{
+					"name": "DELETE-JOGO",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAccess}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44320/api/Jogos/3C168F94-81D2-4956-A21B-AC6B7DAD2F96",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Jogos",
+								"3C168F94-81D2-4956-A21B-AC6B7DAD2F96"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LIST-JOGOS",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAccess}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44320/api/Jogos",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Jogos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE-JOGO",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAccess}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \r\n  \"nome\": \"Cyberpunk 2077\",\r\n  \"descricao\": \"Futuristic open-world action game.\",\r\n  \"preco\": 149.90,\r\n  \"categoria\": \"Ação\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44320/api/Jogos",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Jogos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE-JOGO",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAccess}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {        \r\n        \"nome\": \"Pokemon GO\",\r\n        \"descricao\": \"RPG\",\r\n        \"preco\": 299.99,\r\n        \"categoria\": \"RPG UPDATED\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44320/api/Jogos/8BF982D9-307F-4442-A824-246BA18E572B",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Jogos",
+								"8BF982D9-307F-4442-A824-246BA18E572B"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FIND-BY-ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAccess}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44320/api/Jogos/357b7ffd-800d-4ab6-8d5a-c4eb9a8bc94a",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Jogos",
+								"357b7ffd-800d-4ab6-8d5a-c4eb9a8bc94a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Token/Create-User",
+			"item": [
+				{
+					"name": "CREATE-USER",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Valber Martins\",\r\n  \"email\": \"valber.m@firtpalaceii.com\",\r\n  \"senha\": \"test01\",\r\n  \"role\": \"Administrador\"\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44320/api/Auth/registro",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Auth",
+								"registro"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GENERATE-TOKEN",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n  \"email\": \"valber.m@firtpalaceii.com\",\r\n  \"senha\": \"test01\" \r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44320/api/Auth/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Aluno",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Anderson\",\r\n  \"email\": \"ajmarzola@gmail.com\",\r\n  \"senha\": \"123456\",\r\n  \"role\": \"Aluno\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44320/api/Auth/registro",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Auth",
+								"registro"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Promocoes",
+			"item": [
+				{
+					"name": "List-Promocoes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAccess}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44320/api/Promocoes",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Promocoes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CADASTRAR-PROMOCAO",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAccess}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Promoção de Surpresa\",\r\n  \"descontoPercentual\": 25,\r\n  \"dataInicio\": \"2025-05-28T00:00:00Z\",\r\n  \"dataFim\": \"2025-06-15T23:59:59Z\",\r\n  \"jogoId\": \"8bf982d9-307f-4442-a824-246ba18e572b\"\r\n  }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44320/api/Promocoes",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Promocoes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SELECT-PROMOCAO-BY-ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAccess}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44320/api/Promocoes/17c53f35-1b07-46c3-aa0a-482d58253f73",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Promocoes",
+								"17c53f35-1b07-46c3-aa0a-482d58253f73"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ATUALIZA-PROMOCAO",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAccess}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"id\": \"a23a475a-4b0c-4212-b685-3251cd27432c\",\r\n        \"nome\": \"Promoção de Lançamento updated\",\r\n        \"descontoPercentual\": 20.00,\r\n        \"dataInicio\": \"2025-05-08T00:00:00\",\r\n        \"dataFim\": \"2025-05-15T23:59:59\",\r\n        \"jogoId\": \"8bf982d9-307f-4442-a824-246ba18e572b\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:44320/api/Promocoes/a23a475a-4b0c-4212-b685-3251cd27432c",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Promocoes",
+								"a23a475a-4b0c-4212-b685-3251cd27432c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenAccess}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:44320/api/Promocoes/a23a475a-4b0c-4212-b685-3251cd27432c",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "44320",
+							"path": [
+								"api",
+								"Promocoes",
+								"a23a475a-4b0c-4212-b685-3251cd27432c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

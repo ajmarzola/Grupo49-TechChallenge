@@ -13,6 +13,7 @@ variables:
   solution: '*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  dockerImage: 'valberxz21/fcg.api:latest'
   
 steps:
 
@@ -31,9 +32,16 @@ steps:
 - script: dotnet test $(solution) --configuration $(buildConfiguration) --no-build --collect:"XPlat Code Coverage"
   displayName: 'Test Solution'
 
+- script: |
+    docker pull $(dockerImage)
+  displayName: 'Pull Docker Image'
+
 - task: Docker@2
+  displayName: 'Build and Push Docker Image'
   inputs:
     containerRegistry: 'acrapidotempo'
     repository: 'apidotemporepo'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
+    buildContext: '$(Build.SourcesDirectory)'
+    arguments: '--build-arg BASE_IMAGE=$(dockerImage)'

@@ -1,0 +1,42 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  solution: '*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  dockerImage: 'valberxz21/fcg.api:latest'
+  
+steps:
+
+- task: UseDotNet@2
+  displayName: 'Install .Net SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'
+
+- script: dotnet restore $(solution)
+  displayName: 'Restore Solution'
+
+- script: dotnet build $(solution) --configuration $(buildConfiguration)
+  displayName: 'Build Solution'
+
+- script: dotnet test $(solution) --configuration $(buildConfiguration) --no-build --collect:"XPlat Code Coverage"
+  displayName: 'Test Solution'
+
+- script: |
+    docker pull $(dockerImage)
+  displayName: 'Pull Docker Image'
+
+- task: Docker@2
+  displayName: 'Build and Push Docker Image'
+  inputs:
+    containerRegistry: 'fcgapi'
+    repository: 'Grupo49-TechChallenge'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    buildContext: '$(Build.SourcesDirectory)'
+    arguments: '--build-arg BASE_IMAGE=$(dockerImage)'

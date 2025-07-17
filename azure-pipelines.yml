@@ -40,16 +40,26 @@ stages:
       inputs:
         command: 'test'
         projects: 'tests/FCG.Tests/FCG.Tests.csproj'
-        arguments: '--no-build --configuration Release --collect:"XPlat Code Coverage"'
+        arguments: '--no-build --configuration Release'
         publishTestResults: true
+
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: 'XPlat'
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml'
 
     - task: DotNetCoreCLI@2
       displayName: 'Run BDD tests'
       inputs:
         command: 'test'
         projects: 'tests/FCG.Tests/FCG.BDD.Tests.csproj'
-        arguments: '--no-build --configuration Release --collect:"XPlat Code Coverage"'
+        arguments: '--no-build --configuration Release'
         publishTestResults: true
+
+    - task: PublishCodeCoverageResults@2
+      inputs:
+        codeCoverageTool: 'XPlat'
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml'
 
     - task: Docker@2
       displayName: Build Docker image

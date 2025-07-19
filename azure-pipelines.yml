@@ -21,7 +21,7 @@ stages:
       inputs:
         packageType: 'sdk'
         version: '8.0.x'
-    
+
     - task: DotNetCoreCLI@2
       displayName: 'Restore solution'
       inputs:
@@ -65,7 +65,7 @@ stages:
       displayName: Build Docker image
       inputs:
         command: build
-        dockerfile: Dockerfile
+        dockerfile: src/FCG.API/Dockerfile     # 👈 Corrigido
+        buildContext: $(Build.SourcesDirectory) # 👈 Corrigido
         tags: |
           $(REGISTRY_LOGIN_SERVER)/fcg.api:$(Build.BuildId)
-        buildContext: $(Build.SourcesDirectory)

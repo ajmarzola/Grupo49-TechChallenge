@@ -65,6 +65,7 @@ stages:
       displayName: Build Docker image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/src/FCG.API/Dockerfile'
+        dockerfile: Dockerfile
         tags: |
-          $(tag)
+          $(REGISTRY_LOGIN_SERVER)/fcg.api:$(Build.BuildId)
+        buildContext: $(Build.SourcesDirectory)

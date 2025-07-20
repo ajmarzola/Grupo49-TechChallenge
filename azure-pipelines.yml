@@ -1,5 +1,7 @@
-trigger:
-- main
+pr:
+  branches:
+    include:
+      - '*'
 
 resources:
 - repo: self

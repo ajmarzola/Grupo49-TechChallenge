@@ -86,7 +86,7 @@ namespace FCG.API
                 };
 
                 var token = tokenHandler.CreateToken(tokenDescriptor);
-
+                throw new Exception("Teste New Relic");
                 return Ok(new { token = tokenHandler.WriteToken(token) });
             }
             catch (Exception ex)

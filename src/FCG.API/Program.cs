@@ -92,7 +92,10 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Configurar Serilog
-Log.Logger = new LoggerConfiguration().WriteTo.Console().WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day).CreateLogger();
+Log.Logger = new LoggerConfiguration().WriteTo.Console().WriteTo.File("logs/app.log", rollingInterval: RollingInterval.Day)
+    .WriteTo.NewRelicLogs(licenseKey: builder.Configuration["NewRelic:LicenseKey"],
+        endpointUrl: builder.Configuration["NewRelic:LogEndpoint"] ?? "https://log-api.newrelic.com/log/v1",
+        applicationName: "FCG.API").CreateLogger();
 
 builder.Host.UseSerilog();
 

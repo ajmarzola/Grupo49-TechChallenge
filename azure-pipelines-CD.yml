@@ -91,11 +91,35 @@ stages:
           $(imageName):$(imageTag)
 
     - task: Docker@2
+      displayName: Build New Relic Infra Agent
+      inputs:
+        command: build
+        dockerfile: src/FCG.API/Dockerfile.newrelic
+        buildContext: $(Build.SourcesDirectory)
+        tags: |
+          newrelic-infra:latest
+
+    - task: Docker@2
       displayName: Push Docker image to DockerHub
       inputs:
         command: push
         tags: |
           $(imageName):$(imageTag)
+
+    - task: AzureCLI@2
+      displayName: 'Deploy to Azure Container App'
+      inputs:
+        azureSubscription: 'AzureServiceConnection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
+          
+          az containerapp update \
+            --name fcg-app \
+            --resource-group fcg-rg \
+            --image valberxz21/fcg.api:latest \
+            --container-name fcg-api-container
 
     - task: AzureWebAppContainer@1
       displayName: Deploy container image

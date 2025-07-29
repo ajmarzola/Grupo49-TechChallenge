@@ -1,2 +1,0 @@
-FROM newrelic/infrastructure:latest
-ADD newrelic-infra.yml /newrelic-infra.yml

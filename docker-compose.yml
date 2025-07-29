@@ -18,21 +18,3 @@ services:
     restart: unless-stopped
     networks:
       - fcg-rede
-      
-  newrelic-infra:
-    build:
-      context: .
-      dockerfile: Dockerfile.newrelic
-    container_name: newrelic-infra
-    environment:
-      - NRIA_LICENSE_KEY=d52119491b0f5ba9de94c63a83481afaFFFFNRAL
-    networks:
-      - fcg-rede
-    cap_add:
-      - SYS_PTRACE
-    privileged: true
-    pid: host
-    cgroup: host
-    volumes:
-      - "/:/host:ro"
-      - "/var/run/docker.sock:/var/run/docker.sock"

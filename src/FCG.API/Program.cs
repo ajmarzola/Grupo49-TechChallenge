@@ -111,7 +111,6 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "FCG API V1");
-    c.RoutePrefix = "/swagger"; // Serve o Swagger UI diretamente em /
 });
 //}
 
@@ -191,7 +190,7 @@ app.MapGet("/", () => Results.Content(@"<!DOCTYPE html>
 <body>
     <h1>Grupo 49 - FCG.TechChallenge</h1>
     <h2>🚀 API rodando com sucesso!</h2>
-    <p><a class='swagger-link' href='/swagger'>📘 Documentação da API</a></p>
+    <p><a class='swagger-link' href='/swagger/v1/swagger.json'>📘 Documentação da API</a></p>
     <ul>
         <li>Anderson <span class='badge'>RM005100</span></li>
         <li>Rafael <span class='badge'>RM334455</span></li>

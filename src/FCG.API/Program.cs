@@ -1,21 +1,22 @@
-﻿using FCG.Infrastructure.Data;
-using FCG.API.GraphQL;
+﻿using FCG.API.GraphQL;
+using FCG.Application.Services;
+using FCG.Domain.Repository;
+using FCG.Domain.Services;
+using FCG.Infrastructure.Data;
+using FCG.Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Serilog;
-using Microsoft.AspNetCore.Http;
-using FCG.Application.Services;
-using FCG.Domain.Services;
-using FCG.Domain.Repository;
-using FCG.Infrastructure.Repository;
+using System.Collections.Generic;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +38,7 @@ builder.Services.AddScoped<IPromocaoService, PromocaoService>();
 builder.Services.AddGraphQLServer().AddQueryType<Queries>().AddFiltering().AddSorting().AddProjections();
 
 builder.Services.AddAuthorization();
-
+builder.WebHost.UseUrls("http://+:80");
 
 // 3. JWT
 var jwtKey = builder.Configuration["Jwt:SecretKey"] ?? "sua-chave-super-secreta";
@@ -110,7 +111,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "FCG API V1");
+    c.SwaggerEndpoint("/swagger", "FCG API V1");
 });
 //}
 

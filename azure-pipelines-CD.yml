@@ -100,6 +100,6 @@ stages:
     - task: AzureWebAppContainer@1
       displayName: Deploy container image
       inputs:
-        azureSubscription: 'AzureServiceConnection'
-        appName: 'fcg-appservice'
+        azureSubscription: 'FCGConnection'
+        appName: 'fcg49app'
         containers: '$(imageName):$(imageTag)'

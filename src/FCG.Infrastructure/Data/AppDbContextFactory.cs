@@ -8,7 +8,7 @@ namespace FCG.Infrastructure.Data
         public AppDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-            optionsBuilder.UseSqlServer("Server=grupo49-fcg.database.windows.net;Database=FCGDb;User ID=usrfcgapp;Password=Grupo49FI@P;Encrypt=True;TrustServerCertificate=True");
+            optionsBuilder.UseSqlServer("Server=rm360850.database.windows.net;Database=FCGDb;User ID=usrfcgapp;Password=Grupo49FI@P;Encrypt=True;TrustServerCertificate=True");
 
             return new AppDbContext(optionsBuilder.Options);
         }

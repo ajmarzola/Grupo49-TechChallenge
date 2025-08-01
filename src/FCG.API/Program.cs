@@ -38,7 +38,6 @@ builder.Services.AddScoped<IPromocaoService, PromocaoService>();
 builder.Services.AddGraphQLServer().AddQueryType<Queries>().AddFiltering().AddSorting().AddProjections();
 
 builder.Services.AddAuthorization();
-builder.WebHost.UseUrls("http://+:8080");
 
 // 3. JWT
 var jwtKey = builder.Configuration["Jwt:SecretKey"] ?? "sua-chave-super-secreta";

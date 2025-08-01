@@ -23,6 +23,6 @@ RUN dotnet publish "FCG.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:U
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-EXPOSE 8080
-ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 80
+
 ENTRYPOINT ["dotnet", "FCG.API.dll"]

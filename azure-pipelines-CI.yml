@@ -10,11 +10,11 @@ variables:
   tag: '$(Build.BuildId)'
 
 stages:
-- stage: BuildAndTest
-  displayName: Build and Test
+- stage: Build
+  displayName: Build
   jobs:
-  - job: BuildAndTest
-    displayName: Build and Test Job
+  - job: Build
+    displayName: Build Job
     pool:
       vmImage: ubuntu-latest
     steps:
@@ -69,5 +69,6 @@ stages:
         command: build
         dockerfile: src/FCG.API/Dockerfile
         buildContext: $(Build.SourcesDirectory)/src
+        arguments: '--no-cache'
         tags: |
           $(REGISTRY_LOGIN_SERVER)/fcg.api:$(Build.BuildId)

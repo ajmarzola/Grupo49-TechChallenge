@@ -111,7 +111,8 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger", "FCG API V1");
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "FCG API V1");
+	c.RoutePrefix = "swagger";
 });
 //}
 

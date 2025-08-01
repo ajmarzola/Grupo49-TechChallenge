@@ -87,6 +87,7 @@ stages:
         command: build
         dockerfile: src/FCG.API/Dockerfile
         buildContext: $(Build.SourcesDirectory)/src
+        arguments: '--no-cache'
         tags: |
           $(imageName):$(imageTag)
 

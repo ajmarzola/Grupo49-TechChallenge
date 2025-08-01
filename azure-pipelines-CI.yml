@@ -66,9 +66,11 @@ stages:
     - task: Docker@2
       displayName: Build Docker image
       inputs:
+        containerRegistry: 'DockerHubConnectionFCG'
+        repository: 'valberxz21/fcg-api'
         command: build
         dockerfile: src/FCG.API/Dockerfile
         buildContext: $(Build.SourcesDirectory)/src
         arguments: '--no-cache'
-        tags: |
-          $(REGISTRY_LOGIN_SERVER)/fcg.api:$(Build.BuildId)
+        tags: 'latest'
+        buildContext: '$(Build.SourcesDirectory)'  # <== IMPORTANT: root context including `src/`

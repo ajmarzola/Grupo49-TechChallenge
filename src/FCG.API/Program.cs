@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.WebHost.UseUrls("http://0.0.0.0:8080");
 // 1. Conexão com LocalDB
 //builder.Services.AddPooledDbContextFactory<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -60,7 +60,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // 4. Swagger
-builder.Services.AddAuthorization();
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
@@ -121,7 +121,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapGraphQL("/graphql");
-app.MapControllers();
 #region Start
 
 app.MapGet("/", () => Results.Content(@"<!DOCTYPE html>

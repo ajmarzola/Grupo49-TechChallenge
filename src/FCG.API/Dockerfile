@@ -3,14 +3,15 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0.100 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
-COPY ["FCG.API/FCG.API.csproj", "FCG.API/"]
-COPY ["FCG.Application/FCG.Application.csproj", "FCG.Application/"]
-COPY ["FCG.Domain/FCG.Domain.csproj", "FCG.Domain/"]
-COPY ["FCG.Infrastructure/FCG.Infrastructure.csproj", "FCG.Infrastructure/"]
+COPY ["src/FCG.API/FCG.API.csproj", "FCG.API/"]
+COPY ["src/FCG.Application/FCG.Application.csproj", "FCG.Application/"]
+COPY ["src/FCG.Domain/FCG.Domain.csproj", "FCG.Domain/"]
+COPY ["src/FCG.Infrastructure/FCG.Infrastructure.csproj", "FCG.Infrastructure/"]
+
 
 RUN dotnet restore "FCG.API/FCG.API.csproj"
 
-COPY . .
+COPY ./src .
 WORKDIR /src/FCG.API
 RUN dotnet build "FCG.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

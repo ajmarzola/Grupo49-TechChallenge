@@ -9,7 +9,7 @@ services:
     image: fcg.api:latest
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: src/FCG.API/Dockerfile
     ports:
       - "8080:8080"
     environment:

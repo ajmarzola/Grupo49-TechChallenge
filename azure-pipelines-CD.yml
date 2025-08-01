@@ -79,14 +79,14 @@ stages:
       displayName: Docker Login
       inputs:
         command: login
-        containerRegistry: DockerHubConnection
+        containerRegistry: DockerHub-Valber
 
     - task: Docker@2
       displayName: Build Docker image
       inputs:
         command: build
         dockerfile: src/FCG.API/Dockerfile
-        buildContext: $(Build.SourcesDirectory)/src
+        buildContext: $(Build.SourcesDirectory)
         arguments: '--no-cache'
         tags: |
           $(imageName):$(imageTag)

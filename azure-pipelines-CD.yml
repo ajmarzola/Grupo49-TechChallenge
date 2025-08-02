@@ -8,7 +8,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  imageName: 'ajmarzola/dockerfcg'
+  imageName: 'valberxz21/fcg.api'
   imageTag: 'latest'
 
 stages:
@@ -79,7 +79,7 @@ stages:
       displayName: Docker Login
       inputs:
         command: login
-        containerRegistry: DockerHubConnectionFCG
+        containerRegistry: DockerHub-Valber
 
     - task: Docker@2
       displayName: Build Docker image

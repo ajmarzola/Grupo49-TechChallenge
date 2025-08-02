@@ -101,33 +101,16 @@ stages:
         docker inspect $(imageName):$(imageTag) --format='Imagem: {{.RepoTags}} | SHA: {{.Id}}'
       displayName: '🔎 Verificar digest da imagem Docker'
 
-    - task: AzureWebAppContainer@1
-      displayName: Deploy container image
+    - task: AzureCLI@2
+      displayName: '⚙️ Forçar atualização da imagem na WebApp'
       inputs:
         azureSubscription: 'FCGConnection'
-        appName: 'fcg49app'
-        containers: '$(imageName):$(imageTag)'
-
-    - task: AzureCLI@2
-      displayName: '🔍 Verificar imagem rodando na WebApp'
-      inputs:
-        azureSubscription: 'FCGConnection'  # Use o mesmo nome do seu Service Connection
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          echo "✅ Verificando imagem publicada no Azure Web App..."
-          currentImage=$(az webapp config container show \
-            --name fcg49app \
-            --resource-group FCG \
-            --query containers[0].image -o tsv)
-    
-          echo "📦 Imagem atual na WebApp: $currentImage"
-          echo "🎯 Imagem esperada: $(imageName):$(imageTag)"
-    
-          if [ "$currentImage" == "$(imageName):$(imageTag)" ]; then
-            echo "✅ Imagem correta está rodando."
-          else
-            echo "❌ A WebApp está com uma imagem diferente!"
-            exit 1
-          fi
-    
+          echo "🔄 Atualizando imagem na WebApp via Azure CLI..."
+          az webapp config container set \
+            --name $(fcg49app) \
+            --resource-group $(FCG) \
+            --docker-custom-image-name $(imageName):$(imageTag) \
+            --docker-registry-server-url https://index.docker.io

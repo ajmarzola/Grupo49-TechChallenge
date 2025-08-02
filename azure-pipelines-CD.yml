@@ -9,7 +9,7 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   imageName: 'valberxz21/fcg-api'
-  imageTag: 'latest'
+  imageTag: '$(Build.BuildId)'
 
 stages:
 - stage: BuildAndTest
@@ -97,6 +97,11 @@ stages:
         command: push
         tags: |
           $(imageName):$(imageTag)
+
+    - script: |
+        echo "🔍 Inspecionando imagem gerada..."
+        docker inspect $(imageName):$(imageTag) --format='Imagem: {{.RepoTags}} | SHA: {{.Id}}'
+      displayName: 'Verificar SHA da imagem Docker'
 
     - task: AzureWebAppContainer@1
       displayName: Deploy container image

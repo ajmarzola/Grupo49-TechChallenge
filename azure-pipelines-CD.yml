@@ -110,7 +110,7 @@ stages:
         inlineScript: |
           echo "🔄 Atualizando imagem na WebApp via Azure CLI..."
           az webapp config container set \
-            --name $(fcg49app) \
-            --resource-group $(FCG) \
-            --docker-custom-image-name $(imageName):$(imageTag) \
+            --name fcg49app \
+            --resource-group FCG \
+            --docker-custom-image-name "$(imageName):$(imageTag)" \
             --docker-registry-server-url https://index.docker.io

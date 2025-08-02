@@ -10,7 +10,12 @@ variables:
   tag: '$(Build.BuildId)'
   imageName: 'valberxz21/fcg-api'
   imageTag: '$(Build.BuildId)'
-
+  
+  dockerRegistryServiceConnection: 'AzureConteinerConnection'
+  containerRegistry: 'fcgconteiner-dygzeugrgbcgfaac.azurecr.io'
+  imageRepository: 'fcgapi'
+  dockerfilePath: 'FCG.API/Dockerfile'
+  
 stages:
 - stage: BuildAndTest
   displayName: Build and Test
@@ -76,30 +81,24 @@ stages:
     - checkout: self
 
     - task: Docker@2
-      displayName: Docker Login
+      displayName: 'Build Docker image'
       inputs:
-        command: login
-        containerRegistry: DockerHub-Valber
-
-    - script: |
-        echo "🔨 Buildando imagem com tag $(imageTag)"
-        docker build --no-cache -f src/FCG.API/Dockerfile \
-          -t $(imageName):$(imageTag) \
-          -t $(imageName):latest .
-      displayName: Build Docker image
-
-    - task: Docker@2
-      displayName: Push Docker image to DockerHub
-      inputs:
-        command: push
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageRepository)
+        command: 'build'
+        Dockerfile: $(dockerfilePath)
         tags: |
-          $(imageName):$(imageTag)
-
-    - script: |
-        echo "🔍 Baixando imagem do Docker Hub para inspecionar..."
-        docker pull $(imageName):$(imageTag)
-        docker inspect $(imageName):$(imageTag) --format='Imagem: {{.RepoTags}} | SHA: {{.Id}}'
-      displayName: '🔎 Verificar digest da imagem Docker'
+          $(tag)
+        buildContext: $(buildContext)
+    
+    - task: Docker@2
+      displayName: 'Push Docker image to ACR'
+      inputs:
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageRepository)
+        command: 'push'
+        tags: |
+          $(tag)
 
 - stage: Deploy
   displayName: 🚀 Publicar na Azure WebApp
@@ -114,4 +113,4 @@ stages:
             inputs:
               azureSubscription: 'FCGConnection'
               appName: 'fcg49app'
-              containers: '$(imageName):$(imageTag)'
+              containers: 'fcgregistry.azurecr.io/fcgapi:latest'

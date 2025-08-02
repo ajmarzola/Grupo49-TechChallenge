@@ -105,19 +105,13 @@ stages:
   displayName: 🚀 Publicar na Azure WebApp
   jobs:
     - job: DeployToWebApp
-      displayName: ✨ Atualizar WebApp com nova imagem
+      displayName: Atualizar WebApp com nova imagem
       pool:
         vmImage: ubuntu-latest
       steps:
-        - task: AzureCLI@2
-          displayName: ⚙️ Forçar atualização da imagem na WebApp
-          inputs:
-            azureSubscription: 'ConexaoAzure'
-            scriptType: bash
-            scriptLocation: inlineScript
-            inlineScript: |
-              az webapp config container set \
-                --name fcg49app \
-                --resource-group FCG \
-                --docker-custom-image-name $(imageName):$(Build.BuildId) \
-                --docker-registry-server-url https://index.docker.io \
+          - task: AzureWebAppContainer@1
+            displayName: Deploy container image
+            inputs:
+              azureSubscription: 'FCGConnection'
+              appName: 'fcg49app'
+              containers: '$(imageName):$(imageTag)'

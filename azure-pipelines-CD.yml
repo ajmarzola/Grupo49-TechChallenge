@@ -99,9 +99,10 @@ stages:
           $(imageName):$(imageTag)
 
     - script: |
-        echo "🔍 Inspecionando imagem gerada..."
+        echo "🔍 Baixando imagem do Docker Hub para inspecionar..."
+        docker pull $(imageName):$(imageTag)
         docker inspect $(imageName):$(imageTag) --format='Imagem: {{.RepoTags}} | SHA: {{.Id}}'
-      displayName: 'Verificar SHA da imagem Docker'
+      displayName: '🔎 Verificar digest da imagem Docker'
 
     - task: AzureWebAppContainer@1
       displayName: Deploy container image

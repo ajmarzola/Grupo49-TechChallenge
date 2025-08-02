@@ -103,7 +103,6 @@ stages:
 
 - stage: Deploy
   displayName: 🚀 Publicar na Azure WebApp
-  dependsOn: Push
   jobs:
     - job: DeployToWebApp
       displayName: ✨ Atualizar WebApp com nova imagem

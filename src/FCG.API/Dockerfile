@@ -25,5 +25,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 EXPOSE 8080
+EXPOSE 8181
+EXPOSE 8081
+EXPOSE 80
+EXPOSE 81
 
 ENTRYPOINT ["dotnet", "FCG.API.dll"]

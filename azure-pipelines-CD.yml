@@ -101,16 +101,57 @@ stages:
         docker inspect $(imageName):$(imageTag) --format='Imagem: {{.RepoTags}} | SHA: {{.Id}}'
       displayName: '🔎 Verificar digest da imagem Docker'
 
-    - task: AzureCLI@2
-      displayName: '⚙️ Forçar atualização da imagem na WebApp'
-      inputs:
-        azureSubscription: 'FCGConnection'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          echo "🔄 Atualizando imagem na WebApp via Azure CLI..."
-          az webapp config container set \
-            --name fcg49app \
-            --resource-group FCG \
-            --docker-custom-image-name "$(imageName):$(imageTag)" \
-            --docker-registry-server-url https://index.docker.io
+- stage: Deploy
+  displayName: 🚀 Publicar na Azure WebApp
+  dependsOn: Push
+  jobs:
+    - job: DeployToWebApp
+      displayName: ✨ Atualizar WebApp com nova imagem
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+        - task: AzureCLI@2
+          displayName: ⚙️ Forçar atualização da imagem na WebApp
+          inputs:
+            azureSubscription: 'ConexaoAzure'
+            scriptType: bash
+            scriptLocation: inlineScript
+            inlineScript: |
+              az webapp config container set \
+                --name fcg49app \
+                --resource-group FCG \
+                --docker-custom-image-name $(imageName):$(Build.BuildId) \
+                --docker-registry-server-url https://index.docker.io \
+
+# 4. VALIDAÇÃO DO DEPLOY
+- stage: Validate
+  displayName: 🔍 Validar imagem na WebApp
+  dependsOn: Deploy
+  jobs:
+    - job: ValidateImage
+      displayName: 🔍 Verificar imagem rodando
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+        - task: AzureCLI@2
+          displayName: 🔎 Verificar imagem atual na WebApp
+          inputs:
+            azureSubscription: 'ConexaoAzure'
+            scriptType: bash
+            scriptLocation: inlineScript
+            inlineScript: |
+              IMAGE_EXPECTED="$(imageName):$(Build.BuildId)"
+              IMAGE_CURRENT=$(az webapp config container show \
+                --name fcg49app \
+                --resource-group FCG \
+                --query "dockerCustomImageName" -o tsv)
+
+              echo "🌟 Imagem esperada: $IMAGE_EXPECTED"
+              echo "🏠 Imagem atual na WebApp: $IMAGE_CURRENT"
+
+              if [ "$IMAGE_EXPECTED" != "$IMAGE_CURRENT" ]; then
+                echo "❌ A WebApp está com uma imagem diferente!"
+                exit 1
+              fi
+
+              echo "✅ Imagem validada com sucesso!"

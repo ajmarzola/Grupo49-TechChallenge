@@ -8,7 +8,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  imageName: 'valberxz21/fcg-api'
+  imageName: 'valberxz21/fcg.api'
   imageTag: '$(Build.BuildId)'
   
   dockerRegistryServiceConnection: 'AzureConteinerConnection'

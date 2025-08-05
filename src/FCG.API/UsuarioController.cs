@@ -44,8 +44,6 @@ namespace FCG.API
             }
         }
 
-
-
         [HttpGet("{id}")]
         [Authorize]
         public async Task<ActionResult<UsuarioRegistroModel>> BuscarPorId(Guid id)

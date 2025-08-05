@@ -114,9 +114,6 @@ stages:
           - task: AzureWebAppContainer@1
             displayName: 'Deploy: fcg-49-webapp'
             inputs:
-              azureSubscription: 'FCGConnection' # O nome da sua Conexão de Serviço no Azure DevOps
-              appName: 'fcg-49-webapp' # O nome do seu Serviço de Aplicativo no Azure
-              # A linha abaixo é a mais importante.
-              # Ela constrói o nome completo da imagem dinamicamente usando as variáveis.
-              # Ex: fcgconteiner-dygzeugrgbcgfaac.azurecr.io/fcgapi:12345
+              azureSubscription: 'FCGConnection'
+              appName: 'app-fcg49-prod'
               imageName: '$(containerRegistry)/$(imageRepository):$(tag)'

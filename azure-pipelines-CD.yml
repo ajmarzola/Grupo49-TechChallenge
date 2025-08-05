@@ -11,7 +11,7 @@ variables:
   imageName: 'valberxz21/fcg.api'
   imageTag: '$(Build.BuildId)'
   
-  dockerRegistryServiceConnection: 'AzureConteinerConnection'
+  dockerRegistryServiceConnection: 'DockerConnectionFCG'
   containerRegistry: 'fcg49registry-h3d8cvhqbxgnateu.azurecr.io'
   imageRepository: 'fcgapi'
   dockerfilePath: 'src/FCG.API/Dockerfile'
@@ -85,7 +85,7 @@ stages:
       displayName: 'Build and Push image to ACR'
       inputs:
         # A conexão de serviço para autenticação
-        containerRegistry: $(containerRegistry) 
+        containerRegistry: $(dockerRegistryServiceConnection) 
         
         # O nome do repositório dentro do seu ACR
         repository: $(imageRepository)

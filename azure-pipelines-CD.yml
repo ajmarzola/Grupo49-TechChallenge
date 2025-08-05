@@ -12,7 +12,7 @@ variables:
   imageTag: '$(Build.BuildId)'
   
   dockerRegistryServiceConnection: 'AzureConteinerConnection'
-  containerRegistry: 'fcgconteiner-dygzeugrgbcgfaac.azurecr.io'
+  containerRegistry: 'fcg49registry-h3d8cvhqbxgnateu.azurecr.io'
   imageRepository: 'fcgapi'
   dockerfilePath: 'src/FCG.API/Dockerfile'
   
@@ -109,8 +109,11 @@ stages:
         vmImage: ubuntu-latest
       steps:
           - task: AzureWebAppContainer@1
-            displayName: Deploy container image
+            displayName: 'Deploy: fcg-49-webapp'
             inputs:
-              azureSubscription: 'FCGConnection'
-              appName: 'fcg49app'
-              containers: 'fcgregistry.azurecr.io/fcgapi:latest'
+              azureSubscription: 'FCGConnection' # O nome da sua Conexão de Serviço no Azure DevOps
+              appName: 'fcg-49-webapp' # O nome do seu Serviço de Aplicativo no Azure
+              # A linha abaixo é a mais importante.
+              # Ela constrói o nome completo da imagem dinamicamente usando as variáveis.
+              # Ex: fcgconteiner-dygzeugrgbcgfaac.azurecr.io/fcgapi:12345
+              imageName: '$(containerRegistry)/$(imageRepository):$(tag)'

@@ -8,9 +8,6 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  imageName: 'valberxz21/fcg.api'
-  imageTag: '$(Build.BuildId)'
-  
   dockerRegistryServiceConnection: 'DockerConnectionFCG'
   containerRegistry: 'fcg49registry-h3d8cvhqbxgnateu.azurecr.io'
   imageRepository: 'fcgapi'
@@ -112,7 +109,7 @@ stages:
         vmImage: ubuntu-latest
       steps:
           - task: AzureWebAppContainer@1
-            displayName: 'Deploy: fcg-49-webapp'
+            displayName: 'Deploy: app-fcg49-prod'
             inputs:
               azureSubscription: 'FCGConnection'
               appName: 'app-fcg49-prod'

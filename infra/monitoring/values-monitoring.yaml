@@ -1,0 +1,27 @@
+grafana:
+  adminUser: ajmarzola
+  adminPassword: priand13  # ajuste para Secret em prod
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - grafana.local        # ajuste FQDN
+    path: /
+    pathType: Prefix
+
+prometheus:
+  prometheusSpec:
+    scrapeInterval: 15s
+    evaluationInterval: 15s
+    retention: 7d
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+
+alertmanager:
+  alertmanagerSpec:
+    replicas: 1
+
+kubeEtcd:
+  enabled: false  # em AKS/gerenciados, desabilite se não tiver acesso

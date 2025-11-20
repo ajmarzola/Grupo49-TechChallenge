@@ -133,6 +133,9 @@ Este MVP (Fase 1) implementa a gestão de usuários e a biblioteca de jogos adqu
 - **Event Storming** e **Domain Storytelling** disponíveis no Miro (ou arquivos anexados).
 - Coleção Postman: `FCG.EndPoints.postman_collection.json`.
 
+## Monitoramento
+- Instalação do stack de monitoramento via Helm — ver /infra/monitoring/values-monitoring.yaml
+
 ## 🚀 Tecnologias Utilizadas
 - **.NET 8** — Plataforma principal de desenvolvimento
 - **ASP.NET Core Web API** — Criação de endpoints RESTful

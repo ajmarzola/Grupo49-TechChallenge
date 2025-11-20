@@ -134,7 +134,7 @@ Este MVP (Fase 1) implementa a gestão de usuários e a biblioteca de jogos adqu
 - Coleção Postman: `FCG.EndPoints.postman_collection.json`.
 
 ## Monitoramento
-- Instalação do stack de monitoramento via Helm — ver /infra/monitoring/values-monitoring.yaml
+- Instalação do stack de monitoramento via Helm — ver [values-monitoring.yaml](https://github.com/ajmarzola/Grupo49-TechChallenge/blob/main/infra/monitoring/values-monitoring.yaml)
 
 ## 🚀 Tecnologias Utilizadas
 - **.NET 8** — Plataforma principal de desenvolvimento

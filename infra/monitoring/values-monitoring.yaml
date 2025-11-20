@@ -1,15 +1,15 @@
 grafana:
-  adminUser: ajmarzola
-  adminPassword: priand13  # ajuste para Secret em prod
+  adminUser: admin
+  adminPassword: admin123         # ❗ troque em produção (ou use Secret)
   service:
     type: ClusterIP
   ingress:
-    enabled: true
+    enabled: false                # habilite se tiver Ingress + DNS
     ingressClassName: nginx
-    hosts:
-      - grafana.local        # ajuste FQDN
+    hosts: [ grafana.local ]
     path: /
     pathType: Prefix
+  defaultDashboardsEnabled: true
 
 prometheus:
   prometheusSpec:
@@ -24,4 +24,8 @@ alertmanager:
     replicas: 1
 
 kubeEtcd:
-  enabled: false  # em AKS/gerenciados, desabilite se não tiver acesso
+  enabled: false
+kubeControllerManager:
+  enabled: true
+kubeScheduler:
+  enabled: true

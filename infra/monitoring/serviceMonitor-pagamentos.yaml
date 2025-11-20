@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: pagamentos-api-sm
+  namespace: monitoring
+  labels:
+    release: kps
+spec:
+  selector:
+    matchLabels:
+      app: pagamentos-api
+  namespaceSelector:
+    matchNames: [ fcg-dev ]
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
+      scheme: http

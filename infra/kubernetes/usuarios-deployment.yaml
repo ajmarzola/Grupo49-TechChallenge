@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: usuarios-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: usuarios-api
+  template:
+    metadata:
+      labels:
+        app: usuarios-api
+    spec:
+      containers:
+        - name: usuarios-api
+          image: 855495658219.dkr.ecr.sa-east-1.amazonaws.com/fcg/usuarios-api:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+            - name: ConnectionStrings__Postgres
+              value: "Host=db-usuarios.c30w4memmo6j.sa-east-1.rds.amazonaws.com;Port=5432;Database=fcg;Username=postgres;Password=postgres;Ssl Mode=Require;Trust Server Certificate=true"
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+
+            - name: Db__MigrateOnStartup
+              value: "false"
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"

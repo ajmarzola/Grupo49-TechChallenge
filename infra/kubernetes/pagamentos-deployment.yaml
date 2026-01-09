@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pagamentos-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pagamentos-api
+  template:
+    metadata:
+      labels:
+        app: pagamentos-api
+    spec:
+      containers:
+        - name: pagamentos-api
+          image: 855495658219.dkr.ecr.sa-east-1.amazonaws.com/fcg/pagamentos-api:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+            - name: ConnectionStrings__Postgres
+              value: "Host=db-usuarios.c30w4memmo6j.sa-east-1.rds.amazonaws.com;Port=5432;Database=fcg;Username=postgres;Password=postgres;Ssl Mode=Require;Trust Server Certificate=true"
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+
+            - name: Db__MigrateOnStartup
+              value: "false"
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+              
